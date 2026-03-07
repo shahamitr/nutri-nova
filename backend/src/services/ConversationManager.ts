@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
+import ConversationMemoryService from './ConversationMemoryService';
 
 interface ConversationMessage {
   role: 'user' | 'ai';
@@ -11,6 +12,9 @@ enum ConversationStage {
   GREETING = 'GREETING',
   BASIC_PROFILE = 'BASIC_PROFILE',
   LIFESTYLE = 'LIFESTYLE',
+  HEALTH_CONDITIONS = 'HEALTH_CONDITIONS',
+  HABITS = 'HABITS',
+  PAIN_ASSESSMENT = 'PAIN_ASSESSMENT',
   DYNAMIC_QUESTIONS = 'DYNAMIC_QUESTIONS',
   SUMMARY = 'SUMMARY',
   COMPLETE = 'COMPLETE',
@@ -24,8 +28,30 @@ interface HealthProfileData {
   diet_preference?: string;
   activity_level?: string;
   sleep_hours?: number;
+  sleep_quality?: string;
   stress_level?: string;
+  energy_levels?: string;
   medical_conditions?: string;
+
+  // Comprehensive health fields
+  allergies?: string;
+  smoking_status?: string;
+  alcohol_consumption?: string;
+  water_intake_daily?: number;
+  joint_pain?: boolean;
+  back_pain?: boolean;
+  neck_pain?: boolean;
+  pain_details?: string;
+  chronic_conditions?: string;
+  medications?: string;
+  injuries?: string;
+  dietary_restrictions?: string;
+  food_dislikes?: string;
+  meal_frequency?: number;
+  exercise_limitations?: string;
+  health_goals?: string;
+  family_history?: string;
+  digestive_issues?: string;
 }
 
 interface ConversationState {
@@ -66,7 +92,25 @@ export class ConversationManager {
     const now = new Date();
     const expiresAt = new Date(now.getTime() + this.sessionTTL);
 
-    const greeting = `Hello ${userName}! I'm your AI nutritionist. I'll ask you a few questions to create your personalized diet plan. Let's start with some basic information about you.`;
+    // Load user's memory context for personalized greeting
+    const memoryContext = await ConversationMemoryService.getContextForPrompt(userId);
+    const memories = await ConversationMemoryService.getUserMemories(userId, 5);
+
+    let greeting = `Hello ${userName}! I'm your AI nutritionist.`;
+
+    // Personalize greeting based on memories
+    if (memories.length > 0) {
+      const lastGoal = memories.find(m => m.memory_type === 'goal');
+      if (lastGoal) {
+        greeting += ` I remember you mentioned: "${lastGoal.content}". Let's continue working on that!`;
+      } else {
+        greeting += ` Welcome back! I remember our previous conversations.`;
+      }
+    } else {
+      greeting += ` I'll ask you a few questions to create your personalized diet plan.`;
+    }
+
+    greeting += ` Let's start with some basic information about you.`;
 
     const initialState: ConversationState = {
       session_id: sessionId,
@@ -158,6 +202,9 @@ export class ConversationManager {
       timestamp: new Date(),
     });
 
+    // Save user message to database
+    await this.saveMessageToDatabase(state.user_id, sessionId, 'user', userResponse);
+
     // Extract data from response based on current stage
     await this.extractDataFromResponse(state, userResponse);
 
@@ -171,6 +218,10 @@ export class ConversationManager {
         content: clarification,
         timestamp: new Date(),
       });
+
+      // Save AI message to database
+      await this.saveMessageToDatabase(state.user_id, sessionId, 'ai', clarification);
+
       this.updateConversationState(sessionId, state);
       return {
         ai_response: clarification,
@@ -192,6 +243,73 @@ export class ConversationManager {
         timestamp: new Date(),
       });
 
+      // Save AI message to database
+      await this.saveMessageToDatabase(state.user_id, sessionId, 'ai', summary);
+
+      // Extract and store memories from the conversation
+      const conversationText = state.conversation_history
+        .filter(m => m.role === 'user')
+        .map(m => m.content)
+        .join('. ');
+
+      await ConversationMemoryService.extractMemoriesFromConversation(
+        state.user_id,
+        conversationText
+      );
+
+      // Store specific important facts as memories
+      const data = state.collected_data;
+
+      // Store dietary restrictions as high-importance memories
+      if (data.dietary_restrictions && data.dietary_restrictions !== 'none') {
+        await ConversationMemoryService.storeMemory({
+          user_id: state.user_id,
+          memory_type: 'restriction',
+          content: `Dietary restrictions: ${data.dietary_restrictions}`,
+          importance: 9
+        });
+      }
+
+      // Store allergies as critical memories
+      if (data.allergies && data.allergies !== 'none') {
+        await ConversationMemoryService.storeMemory({
+          user_id: state.user_id,
+          memory_type: 'restriction',
+          content: `Allergies: ${data.allergies}`,
+          importance: 10
+        });
+      }
+
+      // Store health goals
+      if (data.health_goals) {
+        await ConversationMemoryService.storeMemory({
+          user_id: state.user_id,
+          memory_type: 'goal',
+          content: data.health_goals,
+          importance: 8
+        });
+      }
+
+      // Store diet preference
+      if (data.diet_preference) {
+        await ConversationMemoryService.storeMemory({
+          user_id: state.user_id,
+          memory_type: 'preference',
+          content: `Prefers ${data.diet_preference} diet`,
+          importance: 7
+        });
+      }
+
+      // Store chronic conditions as important facts
+      if (data.chronic_conditions && data.chronic_conditions !== 'none') {
+        await ConversationMemoryService.storeMemory({
+          user_id: state.user_id,
+          memory_type: 'fact',
+          content: `Chronic conditions: ${data.chronic_conditions}`,
+          importance: 9
+        });
+      }
+
       this.updateConversationState(sessionId, state);
 
       return {
@@ -209,11 +327,37 @@ export class ConversationManager {
       timestamp: new Date(),
     });
 
+    // Save AI message to database
+    await this.saveMessageToDatabase(state.user_id, sessionId, 'ai', nextQuestion);
+
     this.updateConversationState(sessionId, state);
 
     return {
       ai_response: nextQuestion,
-      conver     }
+      conversation_complete: false,
+    };
+  }
+
+  /**
+   * Save message to database
+   */
+  private async saveMessageToDatabase(
+    userId: number,
+    sessionId: string,
+    role: 'user' | 'ai',
+    content: string
+  ): Promise<void> {
+    try {
+      const { query } = await import('../db/connection');
+      await query(
+        'INSERT INTO conversation_history (user_id, session_id, role, content) VALUES (?, ?, ?, ?)',
+        [userId, sessionId, role, content]
+      );
+    } catch (error) {
+      console.error('Error saving message to database:', error);
+      // Don't throw - conversation should continue even if DB save fails
+    }
+  }     }
         }
         // Extract gender
         else if (!state.collected_data.gender) {
@@ -276,6 +420,18 @@ export class ConversationManager {
             state.collected_data.sleep_hours = parseFloat(sleepMatch[1]);
           }
         }
+        // Extract sleep quality
+        else if (state.collected_data.sleep_hours !== undefined && !state.collected_data.sleep_quality) {
+          if (lowerResponse.includes('poor')) {
+            state.collected_data.sleep_quality = 'POOR';
+          } else if (lowerResponse.includes('fair')) {
+            state.collected_data.sleep_quality = 'FAIR';
+          } else if (lowerResponse.includes('good')) {
+            state.collected_data.sleep_quality = 'GOOD';
+          } else if (lowerResponse.includes('excellent')) {
+            state.collected_data.sleep_quality = 'EXCELLENT';
+          }
+        }
         // Extract stress level
         else if (!state.collected_data.stress_level) {
           if (lowerResponse.includes('low')) {
@@ -286,7 +442,53 @@ export class ConversationManager {
             state.collected_data.stress_level = 'HIGH';
           }
         }
+        // Extract energy levels
+        else if (!state.collected_data.energy_levels) {
+          if (lowerResponse.includes('very low')) {
+            state.collected_data.energy_levels = 'VERY_LOW';
+          } else if (lowerResponse.includes('low')) {
+            state.collected_data.energy_levels = 'LOW';
+          } else if (lowerResponse.includes('moderate')) {
+            state.collected_data.energy_levels = 'MODERATE';
+          } else if (lowerResponse.includes('high') && !lowerResponse.includes('very')) {
+            state.collected_data.energy_levels = 'HIGH';
+          } else if (lowerResponse.includes('very high')) {
+            state.collected_data.energy_levels = 'VERY_HIGH';
+          }
+        }
         break;
+
+      case ConversationStage.HEALTH_CONDITIONS:
+        // Extract allergies
+        if (state.collected_data.allergies === undefined) {
+          state.collected_data.allergies = lowerResponse.includes('none') || lowerResponse.includes('no') ? null : response;
+        }
+        // Extract chronic conditions
+        else if (state.collected_data.chronic_conditions === undefined) {
+          state.collected_data.chronic_conditions = lowerResponse.includes('none') || lowerResponse.includes('no') ? null : response;
+        }
+        // Extract medications
+        else if (state.collected_data.medications === undefined) {
+          state.collected_data.medications = lowerResponse.includes('none') || lowerResponse.includes('no') ? null : response;
+        }
+        // Extract injuries
+        else if (state.collected_data.injuries === undefined) {
+          state.collected_data.injuries = lowerResponse.includes('none') || lowerResponse.includes('no') ? null : response;
+        }
+        // Extract dietary restrictions
+        else if (state.collected_data.dietary_restrictions === undefined) {
+          state.collected_data.dietary_restrictions = lowerResponse.includes('none') || lowerResponse.includes('no') ? null : response;
+        }
+        // Extract food dislikes
+        else if (state.collected_data.food_dislikes === undefined) {
+          state.collected_data.food_dislikes = lowerResponse.includes('none') || lowerResponse.includes('no') ? null : response;
+        }
+        // Extract digestive issues
+        else if (state.collected_data.digestive_issues === undefined) {
+          state.collected_data.digestive_issues = lowerResponse.includes('none') || lowerResponse.includes('no') ? null : response;
+        }
+        // Extract family history
+        else if (state.collected_data.family_history ===
 
       case ConversationStage.DYNAMIC_QUESTIONS:
         // Store medical conditions or other dynamic responses
@@ -296,7 +498,68 @@ export class ConversationManager {
         break;
     }
   }
+e.includes('occasional')) {
+            state.collected_data.smoking_status = 'OCCASIONAL';
+          } else if (lowerResponse.includes('regular')) {
+            state.collected_data.smoking_status = 'REGULAR';
+          } else if (lowerResponse.includes('heavy')) {
+            state.collected_data.smoking_status = 'HEAVY';
+          }
+        }
+        // Extract alcohol consumption
+        else if (state.collected_data.alcohol_consumption === undefined) {
+          if (lowerResponse.includes('none') || lowerResponse.includes('no') || lowerResponse.includes('never')) {
+            state.collected_data.alcohol_consumption = 'NONE';
+          } else if (lowerResponse.includes('occasional')) {
+            state.collected_data.alcohol_consumption = 'OCCASIONAL';
+          } else if (lowerResponse.includes('moderate')) {
+            state.collected_data.alcohol_consumption = 'MODERATE';
+          } else if (lowerResponse.includes('heavy')) {
+            state.collected_data.alcohol_consumption = 'HEAVY';
+          }
+        }
+        // Extract water intake
+        else if (state.collected_data.water_intake_daily === undefined) {
+          const waterMatch = response.match(/(\d+\.?\d*)/);
+          if (waterMatch) {
+            state.collected_data.water_intake_daily = parseFloat(waterMatch[1]);
+          }
+        }
+        // Extract meal frequency
+        else if (state.collected_data.meal_frequency === undefined) {
+          const mealMatch = response.match(/(\d+)/);
+          if (mealMatch) {
+            state.collected_data.meal_frequency = parseInt(mealMatch[1]);
+          }
+        }
+        break;
 
+      case ConversationStage.PAIN_ASSESSMENT:
+        // Extract joint pain
+        if (state.collected_data.joint_pain === undefined) {
+          state.collected_data.joint_pain = lowerResponse.includes('yes') || lowerResponse.includes('have');
+        }
+        // Extract back pain
+        else if (state.collected_data.back_pain === undefined) {
+          state.collected_data.back_pain = lowerResponse.includes('yes') || lowerResponse.includes('have');
+        }
+        // Extract neck pain
+        else if (state.collected_data.neck_pain === undefined) {
+          state.collected_data.neck_pain = lowerResponse.includes('yes') || lowerResponse.includes('have');
+        }
+        // Extract pain details
+        else if ((state.collected_data.joint_pain || state.collected_data.back_pain || state.collected_data.neck_pain) && !state.collected_data.pain_details) {
+          state.collected_data.pain_details = response;
+        }
+        // Extract exercise limitations
+        else if (state.collected_data.exercise_limitations === undefined) {
+          state.collected_data.exercise_limitations = lowerResponse.includes('none') || lowerResponse.includes('no') ? null : response;
+        }
+        // Extract health goals
+        else if (state.collected_data.health_goals === undefined) {
+          state.collected_data.health_goals = response;
+        }
+        break;
   /**
    * Validate response completeness
    */
@@ -337,7 +600,53 @@ export class ConversationManager {
     if (state.stage === ConversationStage.LIFESTYLE) {
       if (!data.activity_level) return 'What is your daily activity level? (Sedentary/Light/Moderate/Active)';
       if (!data.sleep_hours) return 'How many hours do you sleep per day?';
+      if (data.sleep_hours !== undefined && !data.sleep_quality) return 'How would you rate your sleep quality? (Poor/Fair/Good/Excellent)';
       if (!data.stress_level) return 'What is your stress level? (Low/Moderate/High)';
+      if (!data.energy_levels) return 'How would you describe your energy levels throughout the day? (Very Low/Low/Moderate/High/Very High)';
+
+      // Move to health conditions stage
+      state.stage = ConversationStage.HEALTH_CONDITIONS;
+    }
+
+    // Health Conditions Stage
+    if (state.stage === ConversationStage.HEALTH_CONDITIONS) {
+      if (data.allergies === undefined) return 'Do you have any food allergies or intolerances? (Please list them, or say "none")';
+      if (data.chronic_conditions === undefined) return 'Do you have any chronic health conditions like diabetes, hypertension, thyroid issues, etc.? (Please list them, or say "none")';
+      if (data.medications === undefined) return 'Are you currently taking any medications? (Please list them, or say "none")';
+      if (data.injuries === undefined) return 'Do you have any past or current injuries that might affect your exercise routine? (Please describe, or say "none")';
+      if (data.dietary_restrictions === undefined) return 'Do you have any dietary restrictions due to religious, ethical, or personal reasons? (Please describe, or say "none")';
+      if (data.food_dislikes === undefined) return 'Are there any foods you strongly dislike or prefer to avoid? (Please list them, or say "none")';
+      if (data.digestive_issues === undefined) return 'Do you experience any digestive issues like IBS, acid reflux, bloating, etc.? (Please describe, or say "none")';
+      if (data.family_history === undefined) return 'Is there any relevant family medical history we should know about? (Heart disease, diabetes, obesity, etc., or say "none")';
+
+      // Move to habits stage
+      state.stage = ConversationStage.HABITS;
+    }
+
+    // Habits Stage
+    if (state.stage === ConversationStage.HABITS) {
+      if (data.smoking_status === undefined) return 'Do you smoke? (Non-smoker/Occasional/Regular/Heavy)';
+      if (data.alcohol_consumption === undefined) return 'How often do you consume alcohol? (None/Occasional/Moderate/Heavy)';
+      if (data.water_intake_daily === undefined) return 'How many liters of water do you drink per day on average? (Please provide a number)';
+      if (data.meal_frequency === undefined) return 'How many meals do you prefer to eat per day? (Usually 3-6)';
+
+      // Move to pain assessment stage
+      state.stage = ConversationStage.PAIN_ASSESSMENT;
+    }
+
+    // Pain Assessment Stage
+    if (state.stage === ConversationStage.PAIN_ASSESSMENT) {
+      if (data.joint_pain === undefined) return 'Do you experience any joint pain? (Yes/No)';
+      if (data.back_pain === undefined) return 'Do you experience any back pain? (Yes/No)';
+      if (data.neck_pain === undefined) return 'Do you experience any neck pain? (Yes/No)';
+
+      // If any pain reported, ask for details
+      if ((data.joint_pain || data.back_pain || data.neck_pain) && !data.pain_details) {
+        return 'Please describe your pain in more detail (location, severity, when it occurs)';
+      }
+
+      if (data.exercise_limitations === undefined) return 'Do you have any physical limitations that would restrict certain exercises? (Please describe, or say "none")';
+      if (data.health_goals === undefined) return 'What are your specific health goals beyond weight management? (e.g., better sleep, more energy, reduced pain, improved fitness, etc.)';
 
       // Move to dynamic questions stage
       state.stage = ConversationStage.DYNAMIC_QUESTIONS;

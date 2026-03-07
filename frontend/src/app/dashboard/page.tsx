@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import ProgressCard from '@/components/dashboard/ProgressCard';
+import StreakIndicator from '@/components/gamification/StreakIndicator';
 import Link from 'next/link';
 
 interface Progress {
@@ -59,6 +60,11 @@ export default function DashboardPage() {
   return (
     <div>
       <h1 className="text-3xl font-bold mb-6">Welcome to NutriVoice AI</h1>
+
+      {/* Streak Indicator */}
+      <div className="mb-6">
+        <StreakIndicator />
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         {progress && (

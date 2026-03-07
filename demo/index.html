@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NutriVoice AI - Conversational Diet Doctor Demo</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="demo-container">
+        <!-- Header -->
+        <header class="demo-header">
+            <div class="logo">
+                <svg width="40" height="40" viewBox="0 0 40 40">
+                    <circle cx="20" cy="20" r="18" fill="#10b981" opacity="0.2"/>
+                    <path d="M20 8 L20 32 M12 20 L28 20" stroke="#10b981" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+                <h1>NutriVoice AI</h1>
+            </div>
+            <p class="tagline">Conversational AI Diet Doctor</p>
+            <div class="powered-by">
+                <span class="powered-text">Powered by</span>
+                <div class="aws-badge">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                        <path d="M6.763 10.036c0 .296.032.535.088.71.064.176.144.368.256.576.04.063.056.127.056.183 0 .08-.048.16-.152.24l-.503.335c-.072.048-.144.072-.208.072-.08 0-.16-.04-.239-.112-.112-.12-.207-.248-.279-.384-.072-.144-.144-.304-.224-.488-.56.66-1.263.99-2.111.99-.604 0-1.086-.172-1.439-.517-.352-.344-.528-.804-.528-1.382 0-.612.216-1.107.648-1.478.432-.37 1.008-.558 1.727-.558.24 0 .487.016.743.056.255.04.519.096.791.16V7.19c0-.563-.12-.957-.351-1.183-.239-.226-.64-.338-1.215-.338-.263 0-.535.032-.815.095-.28.064-.551.144-.815.24-.12.047-.207.08-.256.095-.048.016-.08.024-.104.024-.096 0-.144-.072-.144-.216v-.335c0-.112.016-.2.056-.255.04-.056.12-.112.239-.168.264-.136.576-.248.936-.336.36-.087.744-.128 1.151-.128.88 0 1.527.2 1.943.597.415.398.624.996.624 1.79v2.354zm-2.935 1.1c.231 0 .471-.04.727-.127.255-.088.48-.24.671-.432.12-.12.207-.256.256-.415.048-.16.08-.352.08-.576V9.23c-.208-.048-.423-.08-.647-.104-.224-.023-.448-.04-.672-.04-.48 0-.832.096-1.063.28-.232.184-.344.448-.344.792 0 .328.08.576.247.736.16.168.423.248.743.248zm5.783 1.511c-.12 0-.2-.024-.256-.064-.056-.048-.104-.144-.151-.272l-1.687-5.56c-.048-.16-.072-.264-.072-.312 0-.128.064-.2.191-.2h.783c.128 0 .216.025.256.065.056.047.096.143.144.27l1.207 4.754 1.119-4.754c.04-.16.088-.24.144-.27.056-.04.144-.065.263-.065h.64c.128 0 .216.025.264.065.056.047.104.143.151.27l1.128 4.82 1.239-4.82c.047-.16.095-.24.151-.27.056-.04.136-.065.256-.065h.743c.127 0 .2.064.2.2 0 .047-.009.095-.017.143-.008.048-.024.12-.056.216l-1.735 5.56c-.047.16-.095.256-.151.272-.056.048-.136.064-.255.064h-.688c-.128 0-.216-.024-.264-.064-.056-.048-.104-.144-.152-.28l-1.111-4.617-1.103 4.609c-.047.16-.095.24-.151.28-.056.04-.144.064-.264.064h-.688zm9.143.472c-.416 0-.831-.048-1.239-.144-.407-.096-.72-.2-.927-.312-.12-.064-.2-.136-.231-.2-.032-.064-.048-.136-.048-.2v-.352c0-.144.056-.216.16-.216.064 0 .128.016.2.04.263.12.543.216.839.28.304.064.6.096.903.096.48 0 .855-.088 1.111-.256.264-.168.392-.416.392-.744 0-.216-.072-.4-.207-.544-.136-.144-.448-.272-.927-.384l-1.335-.416c-.672-.216-1.167-.536-1.455-.96-.287-.416-.432-.88-.432-1.382 0-.4.088-.752.255-1.063.168-.312.392-.576.672-.784.279-.208.6-.368.967-.472.367-.104.759-.152 1.167-.152.183 0 .375.008.559.032.191.024.367.056.535.088.16.04.312.08.455.127.144.048.256.096.336.144.112.064.191.128.239.2.047.063.072.159.072.271v.328c0 .144-.056.224-.168.224-.064 0-.168-.032-.312-.088-.527-.24-1.119-.36-1.775-.36-.431 0-.767.072-.999.224-.231.151-.344.368-.344.656 0 .216.08.408.24.568.159.16.479.304.951.432l1.303.408c.664.216 1.151.52 1.431.912.279.392.415.856.415 1.39 0 .416-.088.784-.263 1.103-.176.32-.408.592-.696.808-.288.216-.624.368-1.015.464-.4.104-.824.152-1.271.152z"/>
+                    </svg>
+                    <span>Amazon Nova</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Demo Area -->
+        <main class="demo-main">
+            <!-- Conversation Container -->
+            <div class="conversation-container">
+                <div id="conversation-messages" class="messages-area"></div>
+
+                <!-- Voice Indicator (shown during AI speaking) -->
+                <div id="voice-indicator" class="voice-indicator">
+                    <div class="voice-wave">
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                    </div>
+                    <p class="voice-status">
+                        <span class="nova-badge">🎤 Amazon Nova Sonic</span>
+                        <span class="status-text">Speaking...</span>
+                    </p>
+                </div>
+
+                <!-- AI Processing Indicator -->
+                <div id="ai-processing" class="ai-processing-indicator">
+                    <div class="nova-brain">
+                        <svg width="60" height="60" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="40" fill="none" stroke="#10b981" stroke-width="2" class="brain-circle"/>
+                            <circle cx="50" cy="50" r="30" fill="none" stroke="#10b981" stroke-width="2" class="brain-circle" style="animation-delay: 0.2s"/>
+                            <circle cx="50" cy="50" r="20" fill="none" stroke="#10b981" stroke-width="2" class="brain-circle" style="animation-delay: 0.4s"/>
+                        </svg>
+                    </div>
+                    <p class="processing-text">
+                        <span class="nova-badge">🧠 Amazon Nova Lite</span>
+                        <span class="status-text">Analyzing your response...</span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Results Summary Panel (shown at end) -->
+            <div id="results-panel" class="results-panel">
+                <h2>🎉 Your Personalized Nutrition Plan</h2>
+
+                <!-- Health Profile Summary -->
+                <div class="profile-summary">
+                    <div class="profile-item">
+                        <span class="profile-label">Age:</span>
+                        <span class="profile-value">32 years</span>
+                    </div>
+                    <div class="profile-item">
+                        <span class="profile-label">Current BMI:</span>
+                        <span class="profile-value">27.3 (Overweight)</span>
+                    </div>
+                    <div class="profile-item">
+                        <span class="profile-label">Target Weight:</span>
+                        <span class="profile-value">165 lbs (-10 lbs)</span>
+                    </div>
+                    <div class="profile-item">
+                        <span class="profile-label">Activity Level:</span>
+                        <span class="profile-value">Lightly Active</span>
+                    </div>
+                    <div class="profile-item">
+                        <span class="profile-label">Daily Calories:</span>
+                        <span class="profile-value">1,950 kcal</span>
+                    </div>
+                </div>
+
+                <!-- Daily Meal Plan -->
+                <div class="meal-plan-section">
+                    <h3>📅 Your Daily Meal Plan</h3>
+
+                    <!-- Breakfast -->
+                    <div class="meal-detail">
+                        <div class="meal-header">
+                            <span class="meal-icon">🌅</span>
+                            <div class="meal-info">
+                                <h4>Breakfast (7:00 AM - 8:00 AM)</h4>
+                                <p class="meal-calories">450 calories | Protein: 35g | Carbs: 45g | Fats: 15g</p>
+                            </div>
+                        </div>
+                        <ul class="meal-items">
+                            <li>2 scrambled eggs with spinach and tomatoes</li>
+                            <li>1 cup Greek yogurt with mixed berries</li>
+                            <li>1 slice whole grain toast with avocado</li>
+                            <li>Green tea or black coffee (unsweetened)</li>
+                        </ul>
+                        <p class="meal-note">💡 <strong>Why:</strong> High protein breakfast kickstarts metabolism and provides sustained energy</p>
+                    </div>
+
+                    <!-- Mid-Morning Snack -->
+                    <div class="meal-detail">
+                        <div class="meal-header">
+                            <span class="meal-icon">☕</span>
+                            <div class="meal-info">
+                                <h4>Mid-Morning Snack (10:30 AM)</h4>
+                                <p class="meal-calories">150 calories | Protein: 8g | Carbs: 18g | Fats: 6g</p>
+                            </div>
+                        </div>
+                        <ul class="meal-items">
+                            <li>1 medium apple with 1 tbsp almond butter</li>
+                            <li>OR: Handful of mixed nuts (almonds, walnuts)</li>
+                        </ul>
+                        <p class="meal-note">💡 <strong>Why:</strong> Prevents energy dips and controls hunger before lunch</p>
+                    </div>
+
+                    <!-- Lunch -->
+                    <div class="meal-detail">
+                        <div class="meal-header">
+                            <span class="meal-icon">☀️</span>
+                            <div class="meal-info">
+                                <h4>Lunch (12:30 PM - 1:30 PM)</h4>
+                                <p class="meal-calories">550 calories | Protein: 40g | Carbs: 50g | Fats: 20g</p>
+                            </div>
+                        </div>
+                        <ul class="meal-items">
+                            <li>Grilled chicken breast (6 oz) or baked salmon</li>
+                            <li>Quinoa bowl (1 cup cooked)</li>
+                            <li>Mixed green salad with olive oil dressing</li>
+                            <li>Steamed broccoli and carrots</li>
+                        </ul>
+                        <p class="meal-note">💡 <strong>Why:</strong> Balanced macros provide energy for afternoon activities without red meat</p>
+                    </div>
+
+                    <!-- Evening Snack -->
+                    <div class="meal-detail">
+                        <div class="meal-header">
+                            <span class="meal-icon">🍎</span>
+                            <div class="meal-info">
+                                <h4>Evening Snack (4:00 PM - 5:00 PM)</h4>
+                                <p class="meal-calories">200 calories | Protein: 15g | Carbs: 20g | Fats: 8g</p>
+                            </div>
+                        </div>
+                        <ul class="meal-items">
+                            <li>Protein smoothie: banana, protein powder, almond milk</li>
+                            <li>OR: Hummus with carrot and cucumber sticks</li>
+                        </ul>
+                        <p class="meal-note">💡 <strong>Why:</strong> Boosts energy levels and prevents overeating at dinner</p>
+                    </div>
+
+                    <!-- Dinner -->
+                    <div class="meal-detail">
+                        <div class="meal-header">
+                            <span class="meal-icon">🌙</span>
+                            <div class="meal-info">
+                                <h4>Dinner (7:00 PM - 8:00 PM)</h4>
+                                <p class="meal-calories">500 calories | Protein: 42g | Carbs: 40g | Fats: 22g</p>
+                            </div>
+                        </div>
+                        <ul class="meal-items">
+                            <li>Baked salmon or grilled turkey breast (6 oz)</li>
+                            <li>Sweet potato (medium, baked)</li>
+                            <li>Steamed asparagus and Brussels sprouts</li>
+                            <li>Small side salad with lemon dressing</li>
+                        </ul>
+                        <p class="meal-note">💡 <strong>Why:</strong> Lighter dinner aids digestion and better sleep quality</p>
+                    </div>
+
+                    <!-- Before Bed -->
+                    <div class="meal-detail">
+                        <div class="meal-header">
+                            <span class="meal-icon">🌜</span>
+                            <div class="meal-info">
+                                <h4>Before Bed (Optional - 9:00 PM)</h4>
+                                <p class="meal-calories">100 calories | Protein: 10g | Carbs: 8g | Fats: 3g</p>
+                            </div>
+                        </div>
+                        <ul class="meal-items">
+                            <li>Small bowl of cottage cheese with berries</li>
+                            <li>OR: Chamomile tea with a few almonds</li>
+                        </ul>
+                        <p class="meal-note">💡 <strong>Why:</strong> Casein protein supports overnight muscle recovery</p>
+                    </div>
+                </div>
+
+                <!-- Water Intake Section -->
+                <div class="water-section">
+                    <h3>💧 Daily Water Intake Plan</h3>
+                    <div class="water-schedule">
+                        <div class="water-item">
+                            <span class="water-time">Upon Waking (6:30 AM)</span>
+                            <span class="water-amount">2 glasses (500ml)</span>
+                        </div>
+                        <div class="water-item">
+                            <span class="water-time">Before Breakfast</span>
+                            <span class="water-amount">1 glass (250ml)</span>
+                        </div>
+                        <div class="water-item">
+                            <span class="water-time">Mid-Morning</span>
+                            <span class="water-amount">2 glasses (500ml)</span>
+                        </div>
+                        <div class="water-item">
+                            <span class="water-time">Before Lunch</span>
+                            <span class="water-amount">1 glass (250ml)</span>
+                        </div>
+                        <div class="water-item">
+                            <span class="water-time">Afternoon</span>
+                            <span class="water-amount">2 glasses (500ml)</span>
+                        </div>
+                        <div class="water-item">
+                            <span class="water-time">Before Dinner</span>
+                            <span class="water-amount">1 glass (250ml)</span>
+                        </div>
+                        <div class="water-item">
+                            <span class="water-time">Evening</span>
+                            <span class="water-amount">1 glass (250ml)</span>
+                        </div>
+                    </div>
+                    <div class="water-total">
+                        <strong>Total Daily Water:</strong> 2.5 - 3 liters (10-12 glasses)
+                    </div>
+                    <p class="water-note">💡 Drink more during/after your 30-minute walks</p>
+                </div>
+
+                <!-- Additional Recommendations -->
+                <div class="recommendations-section">
+                    <h3>✨ Additional Recommendations</h3>
+                    <div class="recommendations-grid">
+                        <div class="recommendation-card">
+                            <div class="rec-icon">🏃</div>
+                            <h4>Exercise</h4>
+                            <ul>
+                                <li>Continue 30-min walks daily</li>
+                                <li>Add 2-3 strength training sessions/week</li>
+                                <li>Try yoga or stretching for flexibility</li>
+                            </ul>
+                        </div>
+                        <div class="recommendation-card">
+                            <div class="rec-icon">😴</div>
+                            <h4>Sleep</h4>
+                            <ul>
+                                <li>Aim for 7-8 hours nightly</li>
+                                <li>Maintain consistent sleep schedule</li>
+                                <li>Avoid screens 1 hour before bed</li>
+                            </ul>
+                        </div>
+                        <div class="recommendation-card">
+                            <div class="rec-icon">🧘</div>
+                            <h4>Stress Management</h4>
+                            <ul>
+                                <li>Practice 10-min daily meditation</li>
+                                <li>Deep breathing exercises</li>
+                                <li>Take short breaks during work</li>
+                            </ul>
+                        </div>
+                        <div class="recommendation-card">
+                            <div class="rec-icon">📊</div>
+                            <h4>Tracking</h4>
+                            <ul>
+                                <li>Weigh yourself weekly (same time)</li>
+                                <li>Track energy levels daily</li>
+                                <li>Monitor portion sizes</li>
+                            </ul>
+                        </div>
+                        <div class="recommendation-card">
+                            <div class="rec-icon">🚫</div>
+                            <h4>Foods to Limit</h4>
+                            <ul>
+                                <li>Processed foods and sugary snacks</li>
+                                <li>Fried foods and trans fats</li>
+                                <li>Alcohol (max 1-2 drinks/week)</li>
+                            </ul>
+                        </div>
+                        <div class="recommendation-card">
+                            <div class="rec-icon">⏰</div>
+                            <h4>Meal Timing</h4>
+                            <ul>
+                                <li>Eat every 3-4 hours</li>
+                                <li>Don't skip breakfast</li>
+                                <li>Finish dinner 3 hours before bed</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video Recommendations -->
+                <div class="video-recommendations-section">
+                    <h3>📺 Personalized Video Content</h3>
+                    <p class="section-subtitle">Curated YouTube videos to support your health journey</p>
+
+                    <!-- Exercise Videos -->
+                    <div class="video-category">
+                        <h4>🏃 Exercise Videos for You</h4>
+                        <p class="category-note">Based on your lightly active lifestyle and weight loss goal</p>
+                        <div class="video-grid">
+                            <div class="video-card">
+                                <div class="video-thumbnail">
+                                    <img src="https://img.youtube.com/vi/gC_L9qAHVJ8/mqdefault.jpg" alt="Beginner Workout">
+                                    <div class="video-duration">15:30</div>
+                                </div>
+                                <div class="video-info">
+                                    <h5>15 Min Beginner Fat Burning Workout</h5>
+                                    <p class="video-channel">FitnessBlender</p>
+                                    <p class="video-meta">2.5M views</p>
+                                    <a href="https://youtube.com/watch?v=gC_L9qAHVJ8" target="_blank" class="video-link">Watch on YouTube →</a>
+                                </div>
+                            </div>
+                            <div class="video-card">
+                                <div class="video-thumbnail">
+                                    <img src="https://img.youtube.com/vi/cbKkB3POqaY/mqdefault.jpg" alt="Walking Workout">
+                                    <div class="video-duration">30:00</div>
+                                </div>
+                                <div class="video-info">
+                                    <h5>30 Minute Indoor Walking Workout</h5>
+                                    <p class="video-channel">Walk at Home</p>
+                                    <p class="video-meta">5.2M views</p>
+                                    <a href="https://youtube.com/watch?v=cbKkB3POqaY" target="_blank" class="video-link">Watch on YouTube →</a>
+                                </div>
+                            </div>
+                            <div class="video-card">
+                                <div class="video-thumbnail">
+                                    <img src="https://img.youtube.com/vi/UBMk30rjy0o/mqdefault.jpg" alt="Low Impact Cardio">
+                                    <div class="video-duration">20:15</div>
+                                </div>
+                                <div class="video-info">
+                                    <h5>20 Min Low Impact Cardio Workout</h5>
+                                    <p class="video-channel">POPSUGAR Fitness</p>
+                                    <p class="video-meta">3.8M views</p>
+                                    <a href="https://youtube.com/watch?v=UBMk30rjy0o" target="_blank" class="video-link">Watch on YouTube →</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recipe Videos -->
+                    <div class="video-category">
+                        <h4>🍳 Healthy Recipe Videos</h4>
+                        <p class="category-note">Quick, nutritious meals matching your diet plan</p>
+                        <div class="video-grid">
+                            <div class="video-card">
+                                <div class="video-thumbnail">
+                                    <img src="https://img.youtube.com/vi/Yf_Lwe6p-Cg/mqdefault.jpg" alt="Breakfast Recipe">
+                                    <div class="video-duration">8:45</div>
+                                </div>
+                                <div class="video-info">
+                                    <h5>5 High Protein Breakfast Ideas</h5>
+                                    <p class="video-channel">Healthy Fitness Meals</p>
+                                    <p class="video-meta">1.2M views</p>
+                                    <a href="https://youtube.com/watch?v=Yf_Lwe6p-Cg" target="_blank" class="video-link">Watch on YouTube →</a>
+                                </div>
+                            </div>
+                            <div class="video-card">
+                                <div class="video-thumbnail">
+                                    <img src="https://img.youtube.com/vi/VFZ_Eog91Ow/mqdefault.jpg" alt="Smoothie Recipe">
+                                    <div class="video-duration">5:20</div>
+                                </div>
+                                <div class="video-info">
+                                    <h5>3 Healthy Smoothie Recipes</h5>
+                                    <p class="video-channel">Pick Up Limes</p>
+                                    <p class="video-meta">890K views</p>
+                                    <a href="https://youtube.com/watch?v=VFZ_Eog91Ow" target="_blank" class="video-link">Watch on YouTube →</a>
+                                </div>
+                            </div>
+                            <div class="video-card">
+                                <div class="video-thumbnail">
+                                    <img src="https://img.youtube.com/vi/8gFLgMCZxQg/mqdefault.jpg" alt="Meal Prep">
+                                    <div class="video-duration">12:30</div>
+                                </div>
+                                <div class="video-info">
+                                    <h5>Easy Meal Prep for Weight Loss</h5>
+                                    <p class="video-channel">Fit Couple Cooks</p>
+                                    <p class="video-meta">2.1M views</p>
+                                    <a href="https://youtube.com/watch?v=8gFLgMCZxQg" target="_blank" class="video-link">Watch on YouTube →</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Wellness Videos -->
+                    <div class="video-category">
+                        <h4>🧘 Wellness & Mindfulness</h4>
+                        <p class="category-note">Meditation and stress management for better results</p>
+                        <div class="video-grid">
+                            <div class="video-card">
+                                <div class="video-thumbnail">
+                                    <img src="https://img.youtube.com/vi/inpok4MKVLM/mqdefault.jpg" alt="Meditation">
+                                    <div class="video-duration">10:00</div>
+                                </div>
+                                <div class="video-info">
+                                    <h5>10 Minute Guided Meditation</h5>
+                                    <p class="video-channel">The Mindful Movement</p>
+                                    <p class="video-meta">4.5M views</p>
+                                    <a href="https://youtube.com/watch?v=inpok4MKVLM" target="_blank" class="video-link">Watch on YouTube →</a>
+                                </div>
+                            </div>
+                            <div class="video-card">
+                                <div class="video-thumbnail">
+                                    <img src="https://img.youtube.com/vi/aEqlQvczMJQ/mqdefault.jpg" alt="Sleep Better">
+                                    <div class="video-duration">15:00</div>
+                                </div>
+                                <div class="video-info">
+                                    <h5>Guided Sleep Meditation</h5>
+                                    <p class="video-channel">Jason Stephenson</p>
+                                    <p class="video-meta">12M views</p>
+                                    <a href="https://youtube.com/watch?v=aEqlQvczMJQ" target="_blank" class="video-link">Watch on YouTube →</a>
+                                </div>
+                            </div>
+                            <div class="video-card">
+                                <div class="video-thumbnail">
+                                    <img src="https://img.youtube.com/vi/O-6f5wQXSu8/mqdefault.jpg" alt="Stress Relief">
+                                    <div class="video-duration">20:00</div>
+                                </div>
+                                <div class="video-info">
+                                    <h5>Yoga for Stress Relief</h5>
+                                    <p class="video-channel">Yoga With Adriene</p>
+                                    <p class="video-meta">8.3M views</p>
+                                    <a href="https://youtube.com/watch?v=O-6f5wQXSu8" target="_blank" class="video-link">Watch on YouTube →</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="video-note">
+                        <p>💡 <strong>Note:</strong> In the full application, these videos are automatically personalized based on your health profile, activity level, dietary restrictions, and fitness goals. You can save favorites and get new recommendations daily!</p>
+                    </div>
+                </div>
+
+                <!-- Timeline -->
+                <div class="timeline-section">
+                    <h3>🎯 Your 12-Week Journey</h3>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-marker">Week 1-2</div>
+                            <div class="timeline-content">
+                                <strong>Adaptation Phase</strong>
+                                <p>Body adjusts to new eating pattern. You may feel slight hunger initially.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker">Week 3-4</div>
+                            <div class="timeline-content">
+                                <strong>Energy Boost</strong>
+                                <p>Notice increased energy levels and better sleep quality. Weight loss: 2-3 lbs.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker">Week 5-8</div>
+                            <div class="timeline-content">
+                                <strong>Momentum Building</strong>
+                                <p>Consistent energy, clothes fit better. Weight loss: 5-6 lbs total.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker">Week 9-12</div>
+                            <div class="timeline-content">
+                                <strong>Goal Achievement</strong>
+                                <p>Reach target weight of 165 lbs. New healthy habits established!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nova Attribution -->
+                <div class="nova-attribution">
+                    <p>✨ This personalized plan was created by <strong>Amazon Nova Lite</strong> analyzing your age, BMI, activity level, and dietary preferences through natural conversation with <strong>Amazon Nova Sonic</strong></p>
+                </div>
+            </div>
+        </main>
+
+        <!-- Control Panel -->
+        <div class="control-panel">
+            <button id="start-demo" class="btn-primary">🎤 Start Voice Conversation</button>
+            <button id="restart-demo" class="btn-secondary" style="display: none;">🔄 Restart Demo</button>
+            <div class="conversation-info">
+                <p class="info-text">Experience a natural voice conversation with AI</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

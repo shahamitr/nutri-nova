@@ -9,8 +9,30 @@ interface HealthProfile {
   diet_preference: string;
   activity_level: string;
   sleep_hours: number;
+  sleep_quality?: string;
   stress_level: string;
+  energy_levels?: string;
   medical_conditions?: string;
+
+  // Comprehensive health fields
+  allergies?: string;
+  smoking_status?: string;
+  alcohol_consumption?: string;
+  water_intake_daily?: number;
+  joint_pain?: boolean;
+  back_pain?: boolean;
+  neck_pain?: boolean;
+  pain_details?: string;
+  chronic_conditions?: string;
+  medications?: string;
+  injuries?: string;
+  dietary_restrictions?: string;
+  food_dislikes?: string;
+  meal_frequency?: number;
+  exercise_limitations?: string;
+  health_goals?: string;
+  family_history?: string;
+  digestive_issues?: string;
 }
 
 interface BMIResult {
@@ -117,8 +139,12 @@ export class HealthService {
       // Insert new profile
       await query(
         `INSERT INTO health_profile
-         (user_id, age, gender, height_cm, weight_kg, diet_preference, activity_level, sleep_hours, stress_level, medical_conditions)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+         (user_id, age, gender, height_cm, weight_kg, diet_preference, activity_level, sleep_hours, sleep_quality,
+          stress_level, energy_levels, medical_conditions, allergies, smoking_status, alcohol_consumption,
+          water_intake_daily, joint_pain, back_pain, neck_pain, pain_details, chronic_conditions, medications,
+          injuries, dietary_restrictions, food_dislikes, meal_frequency, exercise_limitations, health_goals,
+          family_history, digestive_issues)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           profile.user_id,
           profile.age,
@@ -128,8 +154,28 @@ export class HealthService {
           profile.diet_preference,
           profile.activity_level || 'SEDENTARY',
           profile.sleep_hours || 7.0,
+          profile.sleep_quality || 'FAIR',
           profile.stress_level || 'MODERATE',
+          profile.energy_levels || 'MODERATE',
           profile.medical_conditions || null,
+          profile.allergies || null,
+          profile.smoking_status || 'NON_SMOKER',
+          profile.alcohol_consumption || 'NONE',
+          profile.water_intake_daily || null,
+          profile.joint_pain || false,
+          profile.back_pain || false,
+          profile.neck_pain || false,
+          profile.pain_details || null,
+          profile.chronic_conditions || null,
+          profile.medications || null,
+          profile.injuries || null,
+          profile.dietary_restrictions || null,
+          profile.food_dislikes || null,
+          profile.meal_frequency || 3,
+          profile.exercise_limitations || null,
+          profile.health_goals || null,
+          profile.family_history || null,
+          profile.digestive_issues || null,
         ]
       );
     } else {
@@ -137,7 +183,12 @@ export class HealthService {
       await query(
         `UPDATE health_profile
          SET age = ?, gender = ?, height_cm = ?, weight_kg = ?, diet_preference = ?,
-             activity_level = ?, sleep_hours = ?, stress_level = ?, medical_conditions = ?
+             activity_level = ?, sleep_hours = ?, sleep_quality = ?, stress_level = ?, energy_levels = ?,
+             medical_conditions = ?, allergies = ?, smoking_status = ?, alcohol_consumption = ?,
+             water_intake_daily = ?, joint_pain = ?, back_pain = ?, neck_pain = ?, pain_details = ?,
+             chronic_conditions = ?, medications = ?, injuries = ?, dietary_restrictions = ?,
+             food_dislikes = ?, meal_frequency = ?, exercise_limitations = ?, health_goals = ?,
+             family_history = ?, digestive_issues = ?
          WHERE user_id = ?`,
         [
           profile.age,
@@ -147,8 +198,28 @@ export class HealthService {
           profile.diet_preference,
           profile.activity_level || 'SEDENTARY',
           profile.sleep_hours || 7.0,
+          profile.sleep_quality || 'FAIR',
           profile.stress_level || 'MODERATE',
+          profile.energy_levels || 'MODERATE',
           profile.medical_conditions || null,
+          profile.allergies || null,
+          profile.smoking_status || 'NON_SMOKER',
+          profile.alcohol_consumption || 'NONE',
+          profile.water_intake_daily || null,
+          profile.joint_pain || false,
+          profile.back_pain || false,
+          profile.neck_pain || false,
+          profile.pain_details || null,
+          profile.chronic_conditions || null,
+          profile.medications || null,
+          profile.injuries || null,
+          profile.dietary_restrictions || null,
+          profile.food_dislikes || null,
+          profile.meal_frequency || 3,
+          profile.exercise_limitations || null,
+          profile.health_goals || null,
+          profile.family_history || null,
+          profile.digestive_issues || null,
           profile.user_id,
         ]
       );

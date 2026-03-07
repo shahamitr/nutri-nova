@@ -1,146 +1,467 @@
-import { query } from '../db/connection';
+import { db } from '../db/connection';
+import { RowDataPacket, ResultSetHeader } from 'mysql2';
 
-interface UserProgress {
-  user_id: number;
-  profile_completed: boolean;
-  bmi_calculated: boolean;
-  routine_completed: boolean;
-  diet_generated: boolean;
+interface Achievement {
+  id: number;
+  name: string;
+  description: string;
+  icon: string;
   points: number;
-  badges: string[];
-  completion_percentage: number;
+  category: string;
+  requirement_type: string;
+  requirement_value: number;
 }
 
-type ProgressStage = 'profile' | 'bmi' | 'routine' | 'diet';
+interface UserAchievement {
+  id: number;
+  user_id: number;
+  achievement_id: number;
+  earned_at: Date;
+  achievement?: Achievement;
+}
 
-export class GamificationService {
+interface Activity {
+  id: number;
+  user_id: number;
+  activity_type: string;
+  points_earned: number;
+  activity_date: Date;
+  metadata?: any;
+}
+
+interface UserStats {
+  points: number;
+  level: number;
+  current_streak: number;
+  longest_streak: number;
+  total_activities: number;
+  achievements_count: number;
+  next_level_points: number;
+  progress_to_next_level: number;
+}
+
+interface LeaderboardEntry {
+  user_id: number;
+  name: string;
+  points: number;
+  level: number;
+  rank: number;
+}
+
+class GamificationService {
+  // Points for different activities
+  private readonly ACTIVITY_POINTS = {
+    meal_logged: 10,
+    workout_completed: 20,
+    water_logged: 5,
+    video_watched: 5,
+    diet_plan_created: 50,
+    health_assessment: 50,
+    report_generated: 30,
+    goal_updated: 15,
+  };
+
+  // Level thresholds (points needed for each level)
+  private readonly LEVEL_THRESHOLDS = [
+    0,      // Level 1
+    100,    // Level 2
+    250,    // Level 3
+    500,    // Level 4
+    1000,   // Level 5
+    2000,   // Level 6
+    3500,   // Level 7
+    5500,   // Level 8
+    8000,   // Level 9
+    11000,  // Level 10
+    15000,  // Level 11
+    20000,  // Level 12
+    26000,  // Level 13
+    33000,  // Level 14
+    41000,  // Level 15
+    50000,  // Level 16+
+  ];
+
   /**
-   * Initialize progress for a new user
+   * Log an activity and award points
    */
-  async initializeProgress(userId: number): Promise<void> {
-    await query(
-      `INSERT INTO user_progress
-       (user_id, profile_completed, bmi_calculated, routine_completed, diet_generated, points, badges)
-       VALUES (?, FALSE, FALSE, FALSE, FALSE, 0, '[]')`,
+  async logActivity(
+    userId: number,
+    activityType: string,
+    metadata?: any
+  ): Promise<{ points_earned: number; level_up: boolean; new_level?: number }> {
+    const points = this.ACTIVITY_POINTS[activityType as keyof typeof this.ACTIVITY_POINTS] || 0;
+    const today = new Date().toISOString().split('T')[0];
+
+    // Insert activity
+    await db.execute(
+      `INSERT INTO daily_activities (user_id, activity_type, points_earned, activity_date, metadata)
+       VALUES (?, ?, ?, ?, ?)`,
+      [userId, activityType, points, today, JSON.stringify(metadata || {})]
+    );
+
+    // Update user points and check for level up
+    const [userRows] = await db.execute<RowDataPacket[]>(
+      `SELECT points, level FROM users WHERE id = ?`,
       [userId]
     );
+
+    if (userRows.length === 0) {
+      throw new Error('User not found');
+    }
+
+    const currentPoints = userRows[0].points;
+    const currentLevel = userRows[0].level;
+    const newPoints = currentPoints + points;
+    const newLevel = this.calculateLevel(newPoints);
+    const levelUp = newLevel > currentLevel;
+
+    // Update user
+    await db.execute(
+      `UPDATE users
+       SET points = ?,
+           level = ?,
+           total_activities = total_activities + 1,
+           last_activity_date = CURDATE()
+       WHERE id = ?`,
+      [newPoints, newLevel, userId]
+    );
+
+    // Update streak
+    await this.updateStreak(userId);
+
+    // Check for new achievements
+    await this.checkAchievements(userId);
+
+    return {
+      points_earned: points,
+      level_up: levelUp,
+      new_level: levelUp ? newLevel : undefined,
+    };
   }
 
   /**
-   * Update progress for a specific stage
+   * Calculate level based on points
    */
-  async updateProgress(userId: number, stage: ProgressStage): Promise<void> {
-    const stagePoints: Record<ProgressStage, number> = {
-      profile: 20,
-      bmi: 30,
-      routine: 30,
-      diet: 50,
-    };
+  private calculateLevel(points: number): number {
+    for (let i = this.LEVEL_THRESHOLDS.length - 1; i >= 0; i--) {
+      if (points >= this.LEVEL_THRESHOLDS[i]) {
+        return i + 1;
+      }
+    }
+    return 1;
+  }
 
-    const stageBadges: Record<ProgressStage, string> = {
-      profile: 'Health Profile Created',
-      bmi: 'Health Baseline Ready',
-      routine: 'Routine Established',
-      diet: 'Personalized Diet Ready',
-    };
+  /**
+   * Get points needed for next level
+   */
+  private getNextLevelPoints(currentLevel: number): number {
+    if (currentLevel >= this.LEVEL_THRESHOLDS.length) {
+      return this.LEVEL_THRESHOLDS[this.LEVEL_THRESHOLDS.length - 1] +
+             (currentLevel - this.LEVEL_THRESHOLDS.length + 1) * 10000;
+    }
+    return this.LEVEL_THRESHOLDS[currentLevel];
+  }
 
-    const points = stagePoints[stage];
-    const badge = stageBadges[stage];
+  /**
+   * Update user's streak
+   */
+  private async updateStreak(userId: number): Promise<void> {
+    const [rows] = await db.execute<RowDataPacket[]>(
+      `SELECT last_activity_date, current_streak, longest_streak FROM users WHERE id = ?`,
+      [userId]
+    );
 
-    // Update stage completion and points
-    const stageColumn = `${stage}_${stage === 'profile' ? 'completed' : stage === 'bmi' ? 'calculated' : stage === 'routine' ? 'completed' : 'generated'}`;
+    if (rows.length === 0) return;
 
-    // Map stage to column name
-    let columnName: string;
-    if (stage === 'profile') {
-      columnName = 'profile_completed';
-    } else if (stage === 'bmi') {
-      columnName = 'bmi_calculated';
-    } else if (stage === 'routine') {
-      columnName = 'routine_completed';
+    const lastActivityDate = rows[0].last_activity_date;
+    const currentStreak = rows[0].current_streak;
+    const longestStreak = rows[0].longest_streak;
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    let newStreak = currentStreak;
+
+    if (!lastActivityDate) {
+      // First activity
+      newStreak = 1;
     } else {
-      columnName = 'diet_generated';
+      const lastDate = new Date(lastActivityDate);
+      const daysDiff = Math.floor((today.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24));
+
+      if (daysDiff === 0) {
+        // Same day, no change
+        return;
+      } else if (daysDiff === 1) {
+        // Consecutive day
+        newStreak = currentStreak + 1;
+      } else {
+        // Streak broken
+        newStreak = 1;
+      }
     }
 
-    // Update progress only if not already completed
-    await query(
-      `UPDATE user_progress
-       SET ${columnName} = TRUE, points = points + ?
-       WHERE user_id = ? AND ${columnName} = FALSE`,
-      [points, userId]
+    const newLongestStreak = Math.max(newStreak, longestStreak);
+
+    await db.execute(
+      `UPDATE users
+       SET current_streak = ?,
+           longest_streak = ?
+       WHERE id = ?`,
+      [newStreak, newLongestStreak, userId]
+    );
+  }
+
+  /**
+   * Check and award achievements
+   */
+  private async checkAchievements(userId: number): Promise<void> {
+    // Get all achievements
+    const [achievements] = await db.execute<RowDataPacket[]>(
+      `SELECT * FROM achievements`
     );
 
-    // Add badge if not already exists
-    await this.addBadgeIfNotExists(userId, badge);
-  }
-
-  /**
-   * Calculate completion percentage
-   */
-  calculateCompletionPercentage(progress: UserProgress): number {
-    let completedStages = 0;
-    const totalStages = 4;
-
-    if (progress.profile_completed) completedStages++;
-    if (progress.bmi_calculated) completedStages++;
-    if (progress.routine_completed) completedStages++;
-    if (progress.diet_generated) completedStages++;
-
-    return Math.round((completedStages / totalStages) * 100);
-  }
-
-  /**
-   * Get user progress
-   */
-  async getProgress(userId: number): Promise<UserProgress> {
-    const results = await query<any[]>(
-      'SELECT * FROM user_progress WHERE user_id = ?',
+    // Get user's current achievements
+    const [userAchievements] = await db.execute<RowDataPacket[]>(
+      `SELECT achievement_id FROM user_achievements WHERE user_id = ?`,
       [userId]
     );
 
-    if (results.length === 0) {
-      throw new Error('Progress not found');
-    }
+    const earnedIds = new Set(userAchievements.map(ua => ua.achievement_id));
 
-    const progress = results[0];
-    const badges = JSON.parse(progress.badges || '[]');
-
-    const userProgress: UserProgress = {
-      user_id: progress.user_id,
-      profile_completed: Boolean(progress.profile_completed),
-      bmi_calculated: Boolean(progress.bmi_calculated),
-      routine_completed: Boolean(progress.routine_completed),
-      diet_generated: Boolean(progress.diet_generated),
-      points: progress.points,
-      badges,
-      completion_percentage: 0,
-    };
-
-    // Calculate completion percentage
-    userProgress.completion_percentage = this.calculateCompletionPercentage(userProgress);
-
-    return userProgress;
-  }
-
-  /**
-   * Add badge if not already exists
-   */
-  private async addBadgeIfNotExists(userId: number, badge: string): Promise<void> {
-    const progress = await query<any[]>(
-      'SELECT badges FROM user_progress WHERE user_id = ?',
+    // Get user stats
+    const [userRows] = await db.execute<RowDataPacket[]>(
+      `SELECT current_streak FROM users WHERE id = ?`,
       [userId]
     );
 
-    if (progress.length > 0) {
-      const badges = JSON.parse(progress[0].badges || '[]');
+    if (userRows.length === 0) return;
 
-      if (!badges.includes(badge)) {
-        badges.push(badge);
-        await query(
-          'UPDATE user_progress SET badges = ? WHERE user_id = ?',
-          [JSON.stringify(badges), userId]
-        );
+    const currentStreak = userRows[0].current_streak;
+
+    // Check each achievement
+    for (const achievement of achievements) {
+      if (earnedIds.has(achievement.id)) continue;
+
+      let earned = false;
+
+      switch (achievement.requirement_type) {
+        case 'streak_days':
+          earned = currentStreak >= achievement.requirement_value;
+          break;
+
+        case 'meals_logged':
+          const [mealRows] = await db.execute<RowDataPacket[]>(
+            `SELECT COUNT(*) as count FROM daily_activities
+             WHERE user_id = ? AND activity_type = 'meal_logged'`,
+            [userId]
+          );
+          earned = mealRows[0].count >= achievement.requirement_value;
+          break;
+
+        case 'workouts_completed':
+          const [workoutRows] = await db.execute<RowDataPacket[]>(
+            `SELECT COUNT(*) as count FROM daily_activities
+             WHERE user_id = ? AND activity_type = 'workout_completed'`,
+            [userId]
+          );
+          earned = workoutRows[0].count >= achievement.requirement_value;
+          break;
+
+        case 'videos_watched':
+          const [videoRows] = await db.execute<RowDataPacket[]>(
+            `SELECT COUNT(*) as count FROM daily_activities
+             WHERE user_id = ? AND activity_type = 'video_watched'`,
+            [userId]
+          );
+          earned = videoRows[0].count >= achievement.requirement_value;
+          break;
+
+        case 'assessment_completed':
+          const [assessmentRows] = await db.execute<RowDataPacket[]>(
+            `SELECT COUNT(*) as count FROM health_profile WHERE user_id = ?`,
+            [userId]
+          );
+          earned = assessmentRows[0].count >= achievement.requirement_value;
+          break;
+      }
+
+      if (earned) {
+        await this.awardAchievement(userId, achievement.id, achievement.points);
       }
     }
   }
+
+  /**
+   * Award an achievement to a user
+   */
+  private async awardAchievement(
+    userId: number,
+    achievementId: number,
+    points: number
+  ): Promise<void> {
+    try {
+      // Insert achievement
+      await db.execute(
+        `INSERT INTO user_achievements (user_id, achievement_id) VALUES (?, ?)`,
+        [userId, achievementId]
+      );
+
+      // Award points
+      await db.execute(
+        `UPDATE users SET points = points + ? WHERE id = ?`,
+        [points, userId]
+      );
+    } catch (error) {
+      // Ignore duplicate key errors (achievement already earned)
+      if ((error as any).code !== 'ER_DUP_ENTRY') {
+        throw error;
+      }
+    }
+  }
+
+  /**
+   * Get user statistics
+   */
+  async getUserStats(userId: number): Promise<UserStats> {
+    const [rows] = await db.execute<RowDataPacket[]>(
+      `SELECT points, level, current_streak, longest_streak, total_activities
+       FROM users WHERE id = ?`,
+      [userId]
+    );
+
+    if (rows.length === 0) {
+      throw new Error('User not found');
+    }
+
+    const [achievementRows] = await db.execute<RowDataPacket[]>(
+      `SELECT COUNT(*) as count FROM user_achievements WHERE user_id = ?`,
+      [userId]
+    );
+
+    const user = rows[0];
+    const nextLevelPoints = this.getNextLevelPoints(user.level);
+    const currentLevelPoints = user.level > 1 ? this.LEVEL_THRESHOLDS[user.level - 1] : 0;
+    const pointsInLevel = user.points - currentLevelPoints;
+    const pointsNeeded = nextLevelPoints - currentLevelPoints;
+    const progress = Math.min(100, Math.floor((pointsInLevel / pointsNeeded) * 100));
+
+    return {
+      points: user.points,
+      level: user.level,
+      current_streak: user.current_streak,
+      longest_streak: user.longest_streak,
+      total_activities: user.total_activities,
+      achievements_count: achievementRows[0].count,
+      next_level_points: nextLevelPoints,
+      progress_to_next_level: progress,
+    };
+  }
+
+  /**
+   * Get user's achievements
+   */
+  async getUserAchievements(userId: number): Promise<UserAchievement[]> {
+    const [rows] = await db.execute<RowDataPacket[]>(
+      `SELECT ua.*, a.name, a.description, a.icon, a.points, a.category
+       FROM user_achievements ua
+       JOIN achievements a ON ua.achievement_id = a.id
+       WHERE ua.user_id = ?
+       ORDER BY ua.earned_at DESC`,
+      [userId]
+    );
+
+    return rows.map(row => ({
+      id: row.id,
+      user_id: row.user_id,
+      achievement_id: row.achievement_id,
+      earned_at: row.earned_at,
+      achievement: {
+        id: row.achievement_id,
+        name: row.name,
+        description: row.description,
+        icon: row.icon,
+        points: row.points,
+        category: row.category,
+        requirement_type: '',
+        requirement_value: 0,
+      },
+    }));
+  }
+
+  /**
+   * Get all available achievements
+   */
+  async getAllAchievements(): Promise<Achievement[]> {
+    const [rows] = await db.execute<RowDataPacket[]>(
+      `SELECT * FROM achievements ORDER BY category, points`
+    );
+
+    return rows as Achievement[];
+  }
+
+  /**
+   * Get recent activities
+   */
+  async getRecentActivities(userId: number, limit: number = 20): Promise<Activity[]> {
+    const [rows] = await db.execute<RowDataPacket[]>(
+      `SELECT * FROM daily_activities
+       WHERE user_id = ?
+       ORDER BY created_at DESC
+       LIMIT ?`,
+      [userId, limit]
+    );
+
+    return rows.map(row => ({
+      ...row,
+      metadata: typeof row.metadata === 'string' ? JSON.parse(row.metadata) : row.metadata,
+    })) as Activity[];
+  }
+
+  /**
+   * Get leaderboard
+   */
+  async getLeaderboard(limit: number = 50): Promise<LeaderboardEntry[]> {
+    const [rows] = await db.execute<RowDataPacket[]>(
+      `SELECT id as user_id, name, points, level
+       FROM users
+       ORDER BY points DESC, level DESC
+       LIMIT ?`,
+      [limit]
+    );
+
+    return rows.map((row, index) => ({
+      user_id: row.user_id,
+      name: row.name,
+      points: row.points,
+      level: row.level,
+      rank: index + 1,
+    }));
+  }
+
+  /**
+   * Get activity summary for a date range
+   */
+  async getActivitySummary(
+    userId: number,
+    startDate: string,
+    endDate: string
+  ): Promise<Record<string, number>> {
+    const [rows] = await db.execute<RowDataPacket[]>(
+      `SELECT activity_type, COUNT(*) as count
+       FROM daily_activities
+       WHERE user_id = ? AND activity_date BETWEEN ? AND ?
+       GROUP BY activity_type`,
+      [userId, startDate, endDate]
+    );
+
+    const summary: Record<string, number> = {};
+    rows.forEach(row => {
+      summary[row.activity_type] = row.count;
+    });
+
+    return summary;
+  }
 }
+
+export default new GamificationService();

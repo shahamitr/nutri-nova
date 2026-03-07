@@ -4,6 +4,8 @@ import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import AudioVisualizer from './AudioVisualizer';
 import ConversationDisplay from './ConversationDisplay';
+import { logActivityWithToast, ACTIVITY_TYPES } from '@/lib/gamification';
+import LevelUpModal from '@/components/gamification/LevelUpModal';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -20,6 +22,8 @@ export default function VoiceInterface() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [audioStream, setAudioStream] = useState<MediaStream | null>(null);
+  const [showLevelUp, setShowLevelUp] = useState(false);
+  const [newLevel, setNewLevel] = useState(0);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
@@ -169,6 +173,25 @@ export default function VoiceInterface() {
 
       const messageData = await messageResponse.json();
       const aiResponse = messageData.data.response;
+      const conversationStage = messageData.data.stage;
+      const isComplete = messageData.data.complete;
+
+      // Log activities based on conversation stage
+      if (conversationStage === 'HEALTH_ASSESSMENT' && token) {
+        const result = await logActivityWithToast(token, ACTIVITY_TYPES.HEALTH_ASSESSMENT);
+        if (result.level_up && result.new_level) {
+          setNewLevel(result.new_level);
+          setShowLevelUp(true);
+        }
+      }
+
+      if (isComplete && token) {
+        const result = await logActivityWithToast(token, ACTIVITY_TYPES.DIET_PLAN_CREATED);
+        if (result.level_up && result.new_level) {
+          setNewLevel(result.new_level);
+          setShowLevelUp(true);
+        }
+      }
 
       // Add AI response to conversation
       const aiMessage: Message = {
@@ -210,6 +233,12 @@ export default function VoiceInterface() {
 
   return (
     <div className="max-w-4xl mx-auto">
+      <LevelUpModal
+        show={showLevelUp}
+        newLevel={newLevel}
+        onClose={() => setShowLevelUp(false)}
+      />
+
       <div className="bg-white rounded-lg shadow-lg p-6">
         <h2 className="text-2xl font-bold mb-6">Voice Consultation</h2>
 

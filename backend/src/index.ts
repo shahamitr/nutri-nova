@@ -54,6 +54,10 @@ import healthRoutes from './routes/health';
 import dietRoutes from './routes/diet';
 import progressRoutes from './routes/progress';
 import conversationRoutes from './routes/conversation';
+import reportsRoutes from './routes/reports';
+import contentRoutes from './routes/content';
+import memoryRoutes from './routes/memory';
+import gamificationRoutes from './routes/gamification';
 
 // Register API routes
 app.route('/api/auth', authRoutes);
@@ -62,6 +66,10 @@ app.route('/api/health', healthRoutes);
 app.route('/api/diet', dietRoutes);
 app.route('/api/progress', progressRoutes);
 app.route('/api/conversation', conversationRoutes);
+app.route('/api/reports', reportsRoutes);
+app.route('/api/content', contentRoutes);
+app.route('/api/memory', memoryRoutes);
+app.route('/api/gamification', gamificationRoutes);
 
 // API root endpoint
 app.get('/api', (c) => {
@@ -77,6 +85,10 @@ app.get('/api', (c) => {
         diet: '/api/diet',
         progress: '/api/progress',
         conversation: '/api/conversation',
+        reports: '/api/reports',
+        content: '/api/content',
+        memory: '/api/memory',
+        gamification: '/api/gamification',
       },
     },
   });

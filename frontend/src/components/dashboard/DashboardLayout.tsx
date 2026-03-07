@@ -12,8 +12,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     { href: '/dashboard', label: 'Dashboard', icon: '🏠' },
     { href: '/dashboard/diet-planning', label: 'Start Diet Planning', icon: '🎯' },
     { href: '/dashboard/diet-plan', label: 'My Diet Plan', icon: '🍽️' },
+    { href: '/dashboard/exercise-library', label: 'Exercise Library', icon: '💪' },
+    { href: '/dashboard/recipe-hub', label: 'Recipe Hub', icon: '🥗' },
+    { href: '/dashboard/wellness', label: 'Wellness', icon: '🧘' },
+    { href: '/dashboard/favorites', label: 'My Favorites', icon: '⭐' },
+    { href: '/dashboard/memory', label: 'Memory', icon: '🧠' },
+    { href: '/dashboard/gamification', label: 'Progress & Achievements', icon: '🏆' },
     { href: '/dashboard/health-metrics', label: 'Health Metrics', icon: '📊' },
-    { href: '/dashboard/progress', label: 'Progress', icon: '🏆' },
     { href: '/dashboard/settings', label: 'Settings', icon: '⚙️' },
   ];
 

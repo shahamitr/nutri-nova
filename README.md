@@ -8,9 +8,14 @@ Production-quality conversational AI nutritionist application that provides pers
 - 🎤 **Real-time Voice Interaction**: Natural conversations with AI nutritionist
 - 📊 **Health Metrics**: BMI calculation and health profile tracking
 - 🍽️ **Personalized Diet Plans**: AI-generated meal plans based on your profile
-- 🎮 **Gamification**: Progress tracking with stages, badges, and points
+- 🏆 **Gamification System**: Points, levels, achievements, streaks, and leaderboards
+- 🧠 **Conversational Memory**: AI remembers your preferences across sessions
+- 📺 **Content Library**: Personalized exercise, recipe, and wellness videos
+- 📄 **PDF Reports**: Professional health reports with concern highlighting
 - 🎨 **Customizable Voice**: Choose accent, gender, and speech speed
 - 📱 **Responsive Design**: Works on desktop and mobile devices
+
+**For detailed feature documentation, see [FEATURES.md](FEATURES.md)**
 
 ## Technology Stack
 
@@ -206,6 +211,12 @@ Key endpoints:
 - `POST /api/health/save-profile` - Save health profile
 - `POST /api/diet/generate-plan` - Generate diet plan
 - `GET /api/progress/user` - Get user progress
+- `GET /api/gamification/stats` - Get gamification statistics
+- `POST /api/gamification/activity` - Log activity and earn points
+- `GET /api/gamification/leaderboard` - Get global leaderboard
+- `GET /api/content/exercises` - Get personalized exercise videos
+- `GET /api/content/recipes` - Get personalized recipe videos
+- `POST /api/reports/generate` - Generate PDF health report
 
 ## Architecture
 
