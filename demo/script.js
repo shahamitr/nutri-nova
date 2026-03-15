@@ -73,6 +73,28 @@ const conversationFlow = [
 
 let currentStep = 0;
 let messagesContainer, voiceIndicator, aiProcessing;
+let doctorVoice = null;
+let userVoice = null;
+
+// Pre-load distinct voices: female for Dr. Nova, male for user
+function loadVoices() {
+    const voices = speechSynthesis.getVoices();
+    const enVoices = voices.filter(v => v.lang.startsWith('en'));
+
+    // Doctor voice — prefer female-sounding
+    doctorVoice = enVoices.find(v => /female|zira|samantha|karen|fiona|victoria|susan/i.test(v.name))
+        || enVoices[0] || null;
+
+    // User voice — prefer male-sounding, and different from doctor
+    userVoice = enVoices.find(v => /male|david|mark|james|daniel|george|richard/i.test(v.name) && v !== doctorVoice)
+        || enVoices.find(v => v !== doctorVoice)
+        || doctorVoice;
+}
+
+if (speechSynthesis.onvoiceschanged !== undefined) {
+    speechSynthesis.onvoiceschanged = loadVoices;
+}
+loadVoices();
 
 document.addEventListener('DOMContentLoaded', () => {
     messagesContainer = document.getElementById('conversation-messages');
@@ -90,6 +112,7 @@ function startConsultation() {
 }
 
 function restartConsultation() {
+    speechSynthesis.cancel();
     document.getElementById('results-section').style.display = 'none';
     document.getElementById('consultation-section').style.display = 'none';
     document.getElementById('hero-section').style.display = 'flex';
@@ -147,15 +170,33 @@ function showAIVoice(step) {
     document.getElementById('voice-badge-text').textContent = 'Nova Sonic';
     document.getElementById('voice-status-desc').textContent = 'Dr. Nova is speaking...';
 
-    const duration = Math.max(2000, step.text.length * 35);
+    // Show bubble immediately and type text in sync with speech
+    const { bubble, msgEl } = addLiveMessage('ai', step.text);
+    const typer = typeText(msgEl, step.text);
 
-    setTimeout(() => {
-        voiceIndicator.classList.remove('active');
-        addMessage('ai', step.text);
-        if (step.step) markStep(step.step);
-        currentStep++;
-        processNextStep();
-    }, duration);
+    let speechDone = false;
+    let typeDone = false;
+
+    function finish() {
+        if (speechDone && typeDone) {
+            voiceIndicator.classList.remove('active');
+            if (step.step) markStep(step.step);
+            currentStep++;
+            processNextStep();
+        }
+    }
+
+    typer.then(() => { typeDone = true; finish(); });
+
+    const utterance = new SpeechSynthesisUtterance(step.text);
+    utterance.rate = 0.95;
+    utterance.pitch = 1.05;
+    if (doctorVoice) utterance.voice = doctorVoice;
+
+    utterance.onend = () => { speechDone = true; finish(); };
+    utterance.onerror = () => { speechDone = true; finish(); };
+
+    speechSynthesis.speak(utterance);
 }
 
 function showUserVoice(step) {
@@ -163,15 +204,33 @@ function showUserVoice(step) {
     document.getElementById('voice-badge-text').textContent = 'Listening';
     document.getElementById('voice-status-desc').textContent = 'You are speaking...';
 
-    const duration = Math.max(1500, step.text.length * 30);
+    // Show bubble immediately and type text in sync with speech
+    const { bubble, msgEl } = addLiveMessage('user', step.text);
+    const typer = typeText(msgEl, step.text);
 
-    setTimeout(() => {
-        voiceIndicator.classList.remove('active');
-        addMessage('user', step.text);
-        if (step.step) markStep(step.step);
-        currentStep++;
-        processNextStep();
-    }, duration);
+    let speechDone = false;
+    let typeDone = false;
+
+    function finish() {
+        if (speechDone && typeDone) {
+            voiceIndicator.classList.remove('active');
+            if (step.step) markStep(step.step);
+            currentStep++;
+            processNextStep();
+        }
+    }
+
+    typer.then(() => { typeDone = true; finish(); });
+
+    const utterance = new SpeechSynthesisUtterance(step.text);
+    utterance.rate = 1.0;
+    utterance.pitch = 0.85;
+    if (userVoice) utterance.voice = userVoice;
+
+    utterance.onend = () => { speechDone = true; finish(); };
+    utterance.onerror = () => { speechDone = true; finish(); };
+
+    speechSynthesis.speak(utterance);
 }
 
 function showProcessing(duration) {
@@ -188,6 +247,14 @@ function showResults() {
     document.getElementById('consultation-section').style.display = 'none';
     document.getElementById('results-section').style.display = 'block';
 
+    // Set dynamic date on letterpad
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    const dateEl = document.getElementById('lp-date');
+    const sigDateEl = document.getElementById('lp-sig-date');
+    if (dateEl) dateEl.textContent = dateStr;
+    if (sigDateEl) sigDateEl.textContent = dateStr;
+
     // Bind restart
     const restartBtn = document.getElementById('restart-demo');
     if (restartBtn) {
@@ -195,6 +262,23 @@ function showResults() {
     }
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Trigger scroll animations after a brief delay
+    setTimeout(initScrollAnimations, 100);
+}
+
+// Scroll-triggered animations for results cards
+function initScrollAnimations() {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.anim-card').forEach(card => observer.observe(card));
 }
 
 function addMessage(type, text) {
@@ -223,4 +307,56 @@ function addMessage(type, text) {
 
     messagesContainer.appendChild(div);
     div.scrollIntoView({ behavior: 'smooth', block: 'end' });
+}
+
+
+// Create a message bubble immediately (empty) for live typing effect
+function addLiveMessage(type, fullText) {
+    const div = document.createElement('div');
+    div.className = `message ${type}`;
+
+    const avatar = document.createElement('div');
+    avatar.className = `msg-avatar ${type}`;
+    avatar.textContent = type === 'user' ? 'You' : 'Dr';
+
+    const bubble = document.createElement('div');
+    bubble.className = 'msg-bubble';
+
+    const label = document.createElement('div');
+    label.className = 'msg-label';
+    label.textContent = type === 'user' ? 'You (via voice)' : 'Dr. Nova (via voice)';
+
+    const msg = document.createElement('p');
+    msg.className = 'msg-text typing-cursor';
+    msg.textContent = '';
+
+    bubble.appendChild(label);
+    bubble.appendChild(msg);
+    div.appendChild(avatar);
+    div.appendChild(bubble);
+
+    messagesContainer.appendChild(div);
+    div.scrollIntoView({ behavior: 'smooth', block: 'end' });
+
+    return { bubble: div, msgEl: msg };
+}
+
+// Typewriter effect — resolves when all characters are printed
+function typeText(el, text) {
+    return new Promise(resolve => {
+        let i = 0;
+        const speed = Math.max(20, Math.min(45, 3000 / text.length)); // adaptive speed
+        function tick() {
+            if (i < text.length) {
+                el.textContent = text.slice(0, i + 1);
+                i++;
+                el.closest('.message').scrollIntoView({ behavior: 'smooth', block: 'end' });
+                setTimeout(tick, speed);
+            } else {
+                el.classList.remove('typing-cursor');
+                resolve();
+            }
+        }
+        tick();
+    });
 }

@@ -62,24 +62,16 @@
                 <div class="doctor-card">
                     <div class="doctor-avatar">
                         <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <!-- Head -->
                             <circle cx="100" cy="70" r="35" fill="#FBBF24"/>
-                            <!-- Face -->
                             <circle cx="88" cy="65" r="3" fill="#1F2937"/>
                             <circle cx="112" cy="65" r="3" fill="#1F2937"/>
                             <path d="M92 78 Q100 85 108 78" stroke="#1F2937" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-                            <!-- Hair -->
                             <path d="M65 65 Q65 35 100 35 Q135 35 135 65" fill="#4B5563"/>
-                            <!-- Body / White Coat -->
                             <path d="M60 200 L60 130 Q60 105 85 105 L115 105 Q140 105 140 130 L140 200" fill="white" stroke="#E5E7EB" stroke-width="1"/>
-                            <!-- Coat lapels -->
                             <path d="M85 105 L100 135 L115 105" fill="#F3F4F6" stroke="#E5E7EB" stroke-width="1"/>
-                            <!-- Stethoscope -->
                             <path d="M90 115 Q80 130 85 145" stroke="#0D9488" stroke-width="3" fill="none" stroke-linecap="round"/>
                             <circle cx="85" cy="148" r="5" fill="#0D9488"/>
-                            <!-- Shirt underneath -->
                             <path d="M93 105 L100 120 L107 105" fill="#0D9488"/>
-                            <!-- Name tag -->
                             <rect x="105" y="130" width="25" height="12" rx="2" fill="#0D9488" opacity="0.2"/>
                             <rect x="107" y="133" width="15" height="2" rx="1" fill="#0D9488"/>
                             <rect x="107" y="137" width="10" height="2" rx="1" fill="#0D9488" opacity="0.5"/>
@@ -87,7 +79,7 @@
                     </div>
                     <div class="doctor-info">
                         <h3>Dr. Nova</h3>
-                        <p>AI Dietitian & Nutritionist</p>
+                        <p>AI Dietitian &amp; Nutritionist</p>
                         <div class="doctor-status">
                             <span class="status-dot"></span>
                             Available now
@@ -115,7 +107,6 @@
     <!-- Consultation Section (hidden initially) -->
     <section id="consultation-section" class="consultation-section" style="display:none;">
         <div class="consult-container">
-            <!-- Sidebar -->
             <aside class="consult-sidebar">
                 <div class="sidebar-doctor">
                     <div class="sidebar-avatar">
@@ -131,102 +122,44 @@
                     </div>
                     <h3>Dr. Nova</h3>
                     <p>AI Dietitian</p>
-                    <div class="sidebar-status">
-                        <span class="status-dot"></span>
-                        In consultation
-                    </div>
+                    <div class="sidebar-status"><span class="status-dot"></span> In consultation</div>
                 </div>
                 <div class="sidebar-progress">
                     <h4>Consultation Progress</h4>
                     <div class="progress-steps">
-                        <div class="progress-step completed" id="step-greeting">
-                            <div class="step-dot"></div>
-                            <span>Greeting</span>
-                        </div>
-                        <div class="progress-step" id="step-goals">
-                            <div class="step-dot"></div>
-                            <span>Health Goals</span>
-                        </div>
-                        <div class="progress-step" id="step-profile">
-                            <div class="step-dot"></div>
-                            <span>Profile Info</span>
-                        </div>
-                        <div class="progress-step" id="step-activity">
-                            <div class="step-dot"></div>
-                            <span>Activity Level</span>
-                        </div>
-                        <div class="progress-step" id="step-diet">
-                            <div class="step-dot"></div>
-                            <span>Diet Preferences</span>
-                        </div>
-                        <div class="progress-step" id="step-plan">
-                            <div class="step-dot"></div>
-                            <span>Generate Plan</span>
-                        </div>
+                        <div class="progress-step completed" id="step-greeting"><div class="step-dot"></div><span>Greeting</span></div>
+                        <div class="progress-step" id="step-goals"><div class="step-dot"></div><span>Health Goals</span></div>
+                        <div class="progress-step" id="step-profile"><div class="step-dot"></div><span>Profile Info</span></div>
+                        <div class="progress-step" id="step-activity"><div class="step-dot"></div><span>Activity Level</span></div>
+                        <div class="progress-step" id="step-diet"><div class="step-dot"></div><span>Diet Preferences</span></div>
+                        <div class="progress-step" id="step-plan"><div class="step-dot"></div><span>Generate Plan</span></div>
                     </div>
                 </div>
                 <div class="sidebar-tech">
                     <div class="tech-item">
-                        <div class="tech-icon voice">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" fill="currentColor"/><path d="M19 10v2a7 7 0 01-14 0v-2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                        </div>
-                        <div>
-                            <span class="tech-name">Nova Sonic</span>
-                            <span class="tech-desc">Voice Engine</span>
-                        </div>
+                        <div class="tech-icon voice"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" fill="currentColor"/><path d="M19 10v2a7 7 0 01-14 0v-2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+                        <div><span class="tech-name">Nova Sonic</span><span class="tech-desc">Voice Engine</span></div>
                     </div>
                     <div class="tech-item">
-                        <div class="tech-icon brain">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M12 8v4l3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                        </div>
-                        <div>
-                            <span class="tech-name">Nova Lite</span>
-                            <span class="tech-desc">AI Reasoning</span>
-                        </div>
+                        <div class="tech-icon brain"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M12 8v4l3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+                        <div><span class="tech-name">Nova Lite</span><span class="tech-desc">AI Reasoning</span></div>
                     </div>
                 </div>
             </aside>
-
-            <!-- Main Chat Area -->
             <main class="consult-main">
                 <div class="chat-header">
                     <h2>Voice Consultation</h2>
-                    <div class="chat-header-right">
-                        <span class="session-badge">Demo Session</span>
-                    </div>
+                    <div class="chat-header-right"><span class="session-badge">Demo Session</span></div>
                 </div>
-
                 <div id="conversation-messages" class="chat-messages"></div>
-
-                <!-- Voice Indicator -->
                 <div id="voice-indicator" class="voice-indicator">
-                    <div class="voice-wave">
-                        <div class="wave-bar"></div>
-                        <div class="wave-bar"></div>
-                        <div class="wave-bar"></div>
-                        <div class="wave-bar"></div>
-                        <div class="wave-bar"></div>
-                        <div class="wave-bar"></div>
-                        <div class="wave-bar"></div>
-                    </div>
-                    <p id="voice-status-text" class="voice-label">
-                        <span class="voice-badge" id="voice-badge-text">Nova Sonic</span>
-                        <span id="voice-status-desc">Speaking...</span>
-                    </p>
+                    <div class="voice-wave"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
+                    <p id="voice-status-text" class="voice-label"><span class="voice-badge" id="voice-badge-text">Nova Sonic</span><span id="voice-status-desc">Speaking...</span></p>
                 </div>
-
-                <!-- AI Processing -->
                 <div id="ai-processing" class="ai-processing">
-                    <div class="processing-dots">
-                        <span></span><span></span><span></span>
-                    </div>
-                    <p class="processing-label">
-                        <span class="processing-badge">Nova Lite</span>
-                        Analyzing your response...
-                    </p>
+                    <div class="processing-dots"><span></span><span></span><span></span></div>
+                    <p class="processing-label"><span class="processing-badge">Nova Lite</span> Analyzing your response...</p>
                 </div>
-
-                <!-- Chat Footer -->
                 <div class="chat-footer">
                     <div class="chat-footer-info">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" fill="#0D9488"/><path d="M19 10v2a7 7 0 01-14 0v-2" stroke="#0D9488" stroke-width="2" stroke-linecap="round"/></svg>
@@ -237,290 +170,177 @@
         </div>
     </section>
 
-    <!-- Results Section (hidden initially) -->
+    <!-- Results Section -->
     <section id="results-section" class="results-section" style="display:none;">
         <div class="results-container">
-            <!-- Results Header -->
-            <div class="results-header">
-                <div class="results-header-icon">
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="4" stroke="#0D9488" stroke-width="2"/><path d="M8 12l3 3 5-6" stroke="#0D9488" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <!-- Animated Hero Header -->
+            <div class="results-hero">
+                <svg class="results-hero-bg-svg" viewBox="0 0 900 120" fill="none" preserveAspectRatio="none">
+                    <ellipse cx="450" cy="60" rx="400" ry="50" fill="url(#rGrad)" opacity="0.12">
+                        <animate attributeName="rx" values="400;420;400" dur="6s" repeatCount="indefinite"/>
+                        <animate attributeName="ry" values="50;58;50" dur="6s" repeatCount="indefinite"/>
+                    </ellipse>
+                    <defs><linearGradient id="rGrad" x1="0" y1="0" x2="900" y2="120"><stop stop-color="#0D9488"/><stop offset="1" stop-color="#06B6D4"/></linearGradient></defs>
+                </svg>
+                <div class="results-hero-icon">
+                    <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+                        <circle cx="32" cy="32" r="30" fill="#0D9488" opacity="0.1"><animate attributeName="r" values="30;32;30" dur="3s" repeatCount="indefinite"/></circle>
+                        <circle cx="32" cy="32" r="22" fill="#0D9488" opacity="0.18"><animate attributeName="r" values="22;24;22" dur="2.5s" repeatCount="indefinite"/></circle>
+                        <circle cx="32" cy="32" r="14" fill="#0D9488" opacity="0.3"/>
+                        <path d="M24 32l5 5 11-13" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="checkmark-draw"/>
+                    </svg>
                 </div>
-                <div>
-                    <h2>Your Personalized Nutrition Plan</h2>
-                    <p>Prepared by Dr. Nova, AI Dietitian — based on your voice consultation</p>
-                </div>
+                <h2 class="results-title">Your Personalized Nutrition Plan</h2>
+                <p class="results-subtitle">Prepared by Dr. Nova, AI Dietitian — based on your voice consultation</p>
             </div>
 
-            <!-- Patient Summary Card -->
-            <div class="patient-card">
+            <!-- Patient Summary -->
+            <div class="patient-card anim-card">
                 <div class="patient-card-header">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" stroke="#0D9488" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="7" r="4" stroke="#0D9488" stroke-width="2"/></svg>
                     <h3>Patient Summary</h3>
                 </div>
                 <div class="patient-grid">
-                    <div class="patient-stat">
-                        <span class="stat-label">Age</span>
-                        <span class="stat-value">32 years</span>
-                    </div>
+                    <div class="patient-stat"><span class="stat-label">Age</span><span class="stat-value">32 years</span></div>
                     <div class="patient-stat">
                         <span class="stat-label">Current BMI</span>
-                        <span class="stat-value bmi-warning">27.3 <small>Overweight</small></span>
+                        <span class="stat-value bmi-warning">
+                            <span class="bmi-ring-wrap">
+                                <svg class="bmi-ring" width="52" height="52" viewBox="0 0 52 52">
+                                    <circle cx="26" cy="26" r="22" fill="none" stroke="#FEF3C7" stroke-width="5"/>
+                                    <circle cx="26" cy="26" r="22" fill="none" stroke="#D97706" stroke-width="5" stroke-dasharray="138.2" stroke-dashoffset="138.2" stroke-linecap="round" transform="rotate(-90 26 26)" class="bmi-ring-fill"/>
+                                </svg>
+                                <span class="bmi-ring-val">27.3</span>
+                            </span>
+                        </span>
                     </div>
-                    <div class="patient-stat">
-                        <span class="stat-label">Target Weight</span>
-                        <span class="stat-value">165 lbs <small>(-10 lbs)</small></span>
-                    </div>
-                    <div class="patient-stat">
-                        <span class="stat-label">Activity Level</span>
-                        <span class="stat-value">Lightly Active</span>
-                    </div>
+                    <div class="patient-stat"><span class="stat-label">Target Weight</span><span class="stat-value">165 lbs <small>(-10 lbs)</small></span></div>
+                    <div class="patient-stat"><span class="stat-label">Activity Level</span><span class="stat-value">Lightly Active</span></div>
                     <div class="patient-stat">
                         <span class="stat-label">Daily Calories</span>
-                        <span class="stat-value highlight">1,950 kcal</span>
+                        <span class="stat-value highlight">
+                            <svg class="cal-flame" width="22" height="22" viewBox="0 0 24 24" fill="none">
+                                <path d="M12 2c0 4-4 6-4 10a4 4 0 008 0c0-4-4-6-4-10z" fill="#0D9488" opacity="0.7"><animate attributeName="opacity" values="0.5;0.9;0.5" dur="2s" repeatCount="indefinite"/></path>
+                                <path d="M12 8c0 2-2 3-2 5a2 2 0 004 0c0-2-2-3-2-5z" fill="#CCFBF1"/>
+                            </svg>
+                            1,950 kcal
+                        </span>
                     </div>
-                    <div class="patient-stat">
-                        <span class="stat-label">Restrictions</span>
-                        <span class="stat-value">No red meat</span>
+                    <div class="patient-stat"><span class="stat-label">Restrictions</span><span class="stat-value">No red meat</span></div>
+                </div>
+            </div>
+
+            <!-- Macro Donut Chart -->
+            <div class="plan-section macro-overview anim-card">
+                <div class="section-header">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#0D9488" stroke-width="2"/><path d="M12 2a10 10 0 0110 10" stroke="#06B6D4" stroke-width="2" stroke-linecap="round"/></svg>
+                    <h3>Daily Macro Breakdown</h3>
+                </div>
+                <div class="macro-chart-row">
+                    <div class="donut-wrap">
+                        <svg class="donut-chart" viewBox="0 0 120 120">
+                            <circle cx="60" cy="60" r="50" fill="none" stroke="#F3F4F6" stroke-width="14"/>
+                            <circle cx="60" cy="60" r="50" fill="none" stroke="#0D9488" stroke-width="14" stroke-dasharray="314" stroke-dashoffset="314" stroke-linecap="round" transform="rotate(-90 60 60)" class="donut-seg donut-protein"/>
+                            <circle cx="60" cy="60" r="50" fill="none" stroke="#3B82F6" stroke-width="14" stroke-dasharray="314" stroke-dashoffset="314" stroke-linecap="round" transform="rotate(47 60 60)" class="donut-seg donut-carbs"/>
+                            <circle cx="60" cy="60" r="50" fill="none" stroke="#F59E0B" stroke-width="14" stroke-dasharray="314" stroke-dashoffset="314" stroke-linecap="round" transform="rotate(180 60 60)" class="donut-seg donut-fat"/>
+                            <text x="60" y="56" text-anchor="middle" font-size="16" font-weight="800" fill="#1F2937">1,950</text>
+                            <text x="60" y="72" text-anchor="middle" font-size="10" fill="#9CA3AF">kcal/day</text>
+                        </svg>
+                    </div>
+                    <div class="macro-legend">
+                        <div class="legend-item"><span class="legend-dot" style="background:#0D9488"></span><span class="legend-label">Protein</span><span class="legend-val">150g (38%)</span></div>
+                        <div class="legend-item"><span class="legend-dot" style="background:#3B82F6"></span><span class="legend-label">Carbs</span><span class="legend-val">181g (37%)</span></div>
+                        <div class="legend-item"><span class="legend-dot" style="background:#F59E0B"></span><span class="legend-label">Fat</span><span class="legend-val">74g (25%)</span></div>
                     </div>
                 </div>
             </div>
 
             <!-- Meal Plan -->
-            <div class="plan-section">
+            <div class="plan-section anim-card">
                 <div class="section-header">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="3" stroke="#0D9488" stroke-width="2"/><path d="M16 2v4M8 2v4M3 10h18" stroke="#0D9488" stroke-width="2" stroke-linecap="round"/></svg>
                     <h3>Daily Meal Plan</h3>
                 </div>
-</div>
-
                 <div class="meals-grid">
-                    <div class="meal-card">
-                        <div class="meal-card-time">7:00 - 8:00 AM</div>
-                        <div class="meal-card-header">
-                            <span class="meal-emoji">🌅</span>
-                            <div>
-                                <h4>Breakfast</h4>
-                                <span class="meal-cal">450 cal</span>
-                            </div>
-                        </div>
-                        <ul>
-                            <li>2 scrambled eggs with spinach and tomatoes</li>
-                            <li>1 cup Greek yogurt with mixed berries</li>
-                            <li>1 slice whole grain toast with avocado</li>
-                            <li>Green tea or black coffee</li>
-                        </ul>
-                        <div class="meal-macros">
-                            <span class="macro"><b>P</b> 35g</span>
-                            <span class="macro"><b>C</b> 45g</span>
-                            <span class="macro"><b>F</b> 15g</span>
-                        </div>
-                        <p class="meal-why">High protein breakfast kickstarts metabolism and provides sustained energy</p>
-                    </div>
-
-                    <div class="meal-card">
-                        <div class="meal-card-time">10:30 AM</div>
-                        <div class="meal-card-header">
-                            <span class="meal-emoji">☕</span>
-                            <div>
-                                <h4>Mid-Morning Snack</h4>
-                                <span class="meal-cal">150 cal</span>
-                            </div>
-                        </div>
-                        <ul>
-                            <li>1 medium apple with 1 tbsp almond butter</li>
-                            <li>OR: Handful of mixed nuts</li>
-                        </ul>
-                        <div class="meal-macros">
-                            <span class="macro"><b>P</b> 8g</span>
-                            <span class="macro"><b>C</b> 18g</span>
-                            <span class="macro"><b>F</b> 6g</span>
-                        </div>
-                        <p class="meal-why">Prevents energy dips and controls hunger before lunch</p>
-                    </div>
-
-                    <div class="meal-card">
-                        <div class="meal-card-time">12:30 - 1:30 PM</div>
-                        <div class="meal-card-header">
-                            <span class="meal-emoji">☀️</span>
-                            <div>
-                                <h4>Lunch</h4>
-                                <span class="meal-cal">550 cal</span>
-                            </div>
-                        </div>
-                        <ul>
-                            <li>Grilled chicken breast (6 oz) or baked salmon</li>
-                            <li>Quinoa bowl (1 cup cooked)</li>
-                            <li>Mixed green salad with olive oil dressing</li>
-                            <li>Steamed broccoli and carrots</li>
-                        </ul>
-                        <div class="meal-macros">
-                            <span class="macro"><b>P</b> 40g</span>
-                            <span class="macro"><b>C</b> 50g</span>
-                            <span class="macro"><b>F</b> 20g</span>
-                        </div>
-                        <p class="meal-why">Balanced macros provide energy for afternoon activities without red meat</p>
-                    </div>
-
-                    <div class="meal-card">
-                        <div class="meal-card-time">4:00 - 5:00 PM</div>
-                        <div class="meal-card-header">
-                            <span class="meal-emoji">🍎</span>
-                            <div>
-                                <h4>Evening Snack</h4>
-                                <span class="meal-cal">200 cal</span>
-                            </div>
-                        </div>
-                        <ul>
-                            <li>Protein smoothie: banana, protein powder, almond milk</li>
-                            <li>OR: Hummus with carrot and cucumber sticks</li>
-                        </ul>
-                        <div class="meal-macros">
-                            <span class="macro"><b>P</b> 15g</span>
-                            <span class="macro"><b>C</b> 20g</span>
-                            <span class="macro"><b>F</b> 8g</span>
-                        </div>
-                        <p class="meal-why">Boosts energy levels and prevents overeating at dinner</p>
-                    </div>
-
-                    <div class="meal-card">
-                        <div class="meal-card-time">7:00 - 8:00 PM</div>
-                        <div class="meal-card-header">
-                            <span class="meal-emoji">🌙</span>
-                            <div>
-                                <h4>Dinner</h4>
-                                <span class="meal-cal">500 cal</span>
-                            </div>
-                        </div>
-                        <ul>
-                            <li>Baked salmon or grilled turkey breast (6 oz)</li>
-                            <li>Sweet potato (medium, baked)</li>
-                            <li>Steamed asparagus and Brussels sprouts</li>
-                            <li>Small side salad with lemon dressing</li>
-                        </ul>
-                        <div class="meal-macros">
-                            <span class="macro"><b>P</b> 42g</span>
-                            <span class="macro"><b>C</b> 40g</span>
-                            <span class="macro"><b>F</b> 22g</span>
-                        </div>
-                        <p class="meal-why">Lighter dinner aids digestion and better sleep quality</p>
-                    </div>
-
-                    <div class="meal-card">
-                        <div class="meal-card-time">9:00 PM (Optional)</div>
-                        <div class="meal-card-header">
-                            <span class="meal-emoji">🌜</span>
-                            <div>
-                                <h4>Before Bed</h4>
-                                <span class="meal-cal">100 cal</span>
-                            </div>
-                        </div>
-                        <ul>
-                            <li>Small bowl of cottage cheese with berries</li>
-                            <li>OR: Chamomile tea with a few almonds</li>
-                        </ul>
-                        <div class="meal-macros">
-                            <span class="macro"><b>P</b> 10g</span>
-                            <span class="macro"><b>C</b> 8g</span>
-                            <span class="macro"><b>F</b> 3g</span>
-                        </div>
-                        <p class="meal-why">Casein protein supports overnight muscle recovery</p>
-                    </div>
+                    <div class="meal-card"><div class="meal-card-time">7:00 - 8:00 AM</div><div class="meal-card-header"><span class="meal-emoji">🌅</span><div><h4>Breakfast</h4><span class="meal-cal">450 cal</span></div></div><ul><li>2 scrambled eggs with spinach and tomatoes</li><li>1 cup Greek yogurt with mixed berries</li><li>1 slice whole grain toast with avocado</li><li>Green tea or black coffee</li></ul><div class="meal-macros"><span class="macro"><b>P</b> 35g</span><span class="macro"><b>C</b> 45g</span><span class="macro"><b>F</b> 15g</span></div><p class="meal-why">High protein breakfast kickstarts metabolism and provides sustained energy</p></div>
+                    <div class="meal-card"><div class="meal-card-time">10:30 AM</div><div class="meal-card-header"><span class="meal-emoji">☕</span><div><h4>Mid-Morning Snack</h4><span class="meal-cal">150 cal</span></div></div><ul><li>1 medium apple with 1 tbsp almond butter</li><li>OR: Handful of mixed nuts</li></ul><div class="meal-macros"><span class="macro"><b>P</b> 8g</span><span class="macro"><b>C</b> 18g</span><span class="macro"><b>F</b> 6g</span></div><p class="meal-why">Prevents energy dips and controls hunger before lunch</p></div>
+                    <div class="meal-card"><div class="meal-card-time">12:30 - 1:30 PM</div><div class="meal-card-header"><span class="meal-emoji">☀️</span><div><h4>Lunch</h4><span class="meal-cal">550 cal</span></div></div><ul><li>Grilled chicken breast (6 oz) or baked salmon</li><li>Quinoa bowl (1 cup cooked)</li><li>Mixed green salad with olive oil dressing</li><li>Steamed broccoli and carrots</li></ul><div class="meal-macros"><span class="macro"><b>P</b> 40g</span><span class="macro"><b>C</b> 50g</span><span class="macro"><b>F</b> 20g</span></div><p class="meal-why">Balanced macros provide energy for afternoon activities without red meat</p></div>
+                    <div class="meal-card"><div class="meal-card-time">4:00 - 5:00 PM</div><div class="meal-card-header"><span class="meal-emoji">🍎</span><div><h4>Evening Snack</h4><span class="meal-cal">200 cal</span></div></div><ul><li>Protein smoothie: banana, protein powder, almond milk</li><li>OR: Hummus with carrot and cucumber sticks</li></ul><div class="meal-macros"><span class="macro"><b>P</b> 15g</span><span class="macro"><b>C</b> 20g</span><span class="macro"><b>F</b> 8g</span></div><p class="meal-why">Boosts energy levels and prevents overeating at dinner</p></div>
+                    <div class="meal-card"><div class="meal-card-time">7:00 - 8:00 PM</div><div class="meal-card-header"><span class="meal-emoji">🌙</span><div><h4>Dinner</h4><span class="meal-cal">500 cal</span></div></div><ul><li>Baked salmon or grilled turkey breast (6 oz)</li><li>Sweet potato (medium, baked)</li><li>Steamed asparagus and Brussels sprouts</li><li>Small side salad with lemon dressing</li></ul><div class="meal-macros"><span class="macro"><b>P</b> 42g</span><span class="macro"><b>C</b> 40g</span><span class="macro"><b>F</b> 22g</span></div><p class="meal-why">Lighter dinner aids digestion and better sleep quality</p></div>
+                    <div class="meal-card"><div class="meal-card-time">9:00 PM (Optional)</div><div class="meal-card-header"><span class="meal-emoji">🌜</span><div><h4>Before Bed</h4><span class="meal-cal">100 cal</span></div></div><ul><li>Small bowl of cottage cheese with berries</li><li>OR: Chamomile tea with a few almonds</li></ul><div class="meal-macros"><span class="macro"><b>P</b> 10g</span><span class="macro"><b>C</b> 8g</span><span class="macro"><b>F</b> 3g</span></div><p class="meal-why">Casein protein supports overnight muscle recovery</p></div>
                 </div>
             </div>
 
-            <!-- Water Intake -->
-            <div class="plan-section water-plan">
+            <!-- Water Intake with animated bottle -->
+            <div class="plan-section water-plan anim-card">
                 <div class="section-header">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0L12 2.69z" stroke="#3B82F6" stroke-width="2" stroke-linejoin="round"/></svg>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0L12 2.69z" fill="#3B82F6" opacity="0.15"><animate attributeName="opacity" values="0.1;0.25;0.1" dur="3s" repeatCount="indefinite"/></path>
+                        <path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0L12 2.69z" stroke="#3B82F6" stroke-width="2" stroke-linejoin="round"/>
+                    </svg>
                     <h3>Daily Water Intake</h3>
                     <span class="section-tag">2.5 - 3L Daily</span>
                 </div>
-                <div class="water-grid">
-                    <div class="water-row"><span>Upon Waking (6:30 AM)</span><span class="water-amt">500ml</span></div>
-                    <div class="water-row"><span>Before Breakfast</span><span class="water-amt">250ml</span></div>
-                    <div class="water-row"><span>Mid-Morning</span><span class="water-amt">500ml</span></div>
-                    <div class="water-row"><span>Before Lunch</span><span class="water-amt">250ml</span></div>
-                    <div class="water-row"><span>Afternoon</span><span class="water-amt">500ml</span></div>
-                    <div class="water-row"><span>Before Dinner</span><span class="water-amt">250ml</span></div>
-                    <div class="water-row"><span>Evening</span><span class="water-amt">250ml</span></div>
+                <div class="water-visual">
+                    <div class="water-bottle-wrap">
+                        <svg viewBox="0 0 80 160" fill="none" class="bottle-svg">
+                            <rect x="22" y="28" width="36" height="124" rx="10" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="2"/>
+                            <rect x="28" y="18" width="24" height="14" rx="4" fill="#DBEAFE" stroke="#BFDBFE" stroke-width="2"/>
+                            <rect x="24" y="52" width="32" height="98" rx="8" fill="#3B82F6" class="water-fill-anim"/>
+                            <text x="40" y="145" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">2.5L</text>
+                        </svg>
+                    </div>
+                    <div class="water-schedule">
+                        <div class="water-row"><span>Upon Waking (6:30 AM)</span><span class="water-amt">500ml</span></div>
+                        <div class="water-row"><span>Before Breakfast</span><span class="water-amt">250ml</span></div>
+                        <div class="water-row"><span>Mid-Morning</span><span class="water-amt">500ml</span></div>
+                        <div class="water-row"><span>Before Lunch</span><span class="water-amt">250ml</span></div>
+                        <div class="water-row"><span>Afternoon</span><span class="water-amt">500ml</span></div>
+                        <div class="water-row"><span>Before Dinner</span><span class="water-amt">250ml</span></div>
+                        <div class="water-row"><span>Evening</span><span class="water-amt">250ml</span></div>
+                    </div>
                 </div>
                 <p class="water-tip">Drink more during and after your 30-minute walks</p>
             </div>
 
             <!-- Recommendations -->
-            <div class="plan-section">
+            <div class="plan-section anim-card">
                 <div class="section-header">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4" stroke="#0D9488" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="10" stroke="#0D9488" stroke-width="2"/></svg>
                     <h3>Doctor's Recommendations</h3>
                 </div>
                 <div class="rec-grid">
-                    <div class="rec-card">
-                        <div class="rec-card-icon">🏃</div>
-                        <h4>Exercise</h4>
-                        <ul><li>Continue 30-min walks daily</li><li>Add 2-3 strength sessions/week</li><li>Try yoga for flexibility</li></ul>
-                    </div>
-                    <div class="rec-card">
-                        <div class="rec-card-icon">😴</div>
-                        <h4>Sleep</h4>
-                        <ul><li>Aim for 7-8 hours nightly</li><li>Consistent sleep schedule</li><li>No screens 1hr before bed</li></ul>
-                    </div>
-                    <div class="rec-card">
-                        <div class="rec-card-icon">🧘</div>
-                        <h4>Stress</h4>
-                        <ul><li>10-min daily meditation</li><li>Deep breathing exercises</li><li>Short breaks during work</li></ul>
-                    </div>
-                    <div class="rec-card">
-                        <div class="rec-card-icon">📊</div>
-                        <h4>Tracking</h4>
-                        <ul><li>Weekly weigh-ins (same time)</li><li>Track energy levels daily</li><li>Monitor portion sizes</li></ul>
-                    </div>
-                    <div class="rec-card">
-                        <div class="rec-card-icon">🚫</div>
-                        <h4>Foods to Limit</h4>
-                        <ul><li>Processed foods & sugary snacks</li><li>Fried foods & trans fats</li><li>Alcohol (max 1-2/week)</li></ul>
-                    </div>
-                    <div class="rec-card">
-                        <div class="rec-card-icon">⏰</div>
-                        <h4>Meal Timing</h4>
-                        <ul><li>Eat every 3-4 hours</li><li>Don't skip breakfast</li><li>Dinner 3hrs before bed</li></ul>
-                    </div>
+                    <div class="rec-card"><div class="rec-card-icon">🏃</div><h4>Exercise</h4><ul><li>Continue 30-min walks daily</li><li>Add 2-3 strength sessions/week</li><li>Try yoga for flexibility</li></ul></div>
+                    <div class="rec-card"><div class="rec-card-icon">😴</div><h4>Sleep</h4><ul><li>Aim for 7-8 hours nightly</li><li>Consistent sleep schedule</li><li>No screens 1hr before bed</li></ul></div>
+                    <div class="rec-card"><div class="rec-card-icon">🧘</div><h4>Stress</h4><ul><li>10-min daily meditation</li><li>Deep breathing exercises</li><li>Short breaks during work</li></ul></div>
+                    <div class="rec-card"><div class="rec-card-icon">📊</div><h4>Tracking</h4><ul><li>Weekly weigh-ins (same time)</li><li>Track energy levels daily</li><li>Monitor portion sizes</li></ul></div>
+                    <div class="rec-card"><div class="rec-card-icon">🚫</div><h4>Foods to Limit</h4><ul><li>Processed foods &amp; sugary snacks</li><li>Fried foods &amp; trans fats</li><li>Alcohol (max 1-2/week)</li></ul></div>
+                    <div class="rec-card"><div class="rec-card-icon">⏰</div><h4>Meal Timing</h4><ul><li>Eat every 3-4 hours</li><li>Don't skip breakfast</li><li>Dinner 3hrs before bed</li></ul></div>
                 </div>
             </div>
 
-            <!-- 12-Week Timeline -->
-            <div class="plan-section">
+            <!-- 12-Week Timeline with animated progress bars -->
+            <div class="plan-section anim-card">
                 <div class="section-header">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 8v4l3 3" stroke="#0D9488" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="10" stroke="#0D9488" stroke-width="2"/></svg>
                     <h3>Your 12-Week Journey</h3>
                 </div>
                 <div class="timeline">
                     <div class="tl-item">
-                        <div class="tl-marker">1-2</div>
-                        <div class="tl-content">
-                            <h4>Adaptation Phase</h4>
-                            <p>Body adjusts to new eating pattern. You may feel slight hunger initially.</p>
-                        </div>
+                        <div class="tl-marker"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4" stroke="#fff" stroke-width="2" stroke-linecap="round"><animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="8s" repeatCount="indefinite"/></path></svg></div>
+                        <div class="tl-content"><h4>Weeks 1-2: Adaptation</h4><p>Body adjusts to new eating pattern. You may feel slight hunger initially.</p><div class="tl-progress"><div class="tl-bar" style="--tw:25%"></div></div></div>
                     </div>
                     <div class="tl-item">
-                        <div class="tl-marker">3-4</div>
-                        <div class="tl-content">
-                            <h4>Energy Boost</h4>
-                            <p>Increased energy levels and better sleep quality. Weight loss: 2-3 lbs.</p>
-                        </div>
+                        <div class="tl-marker"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="#fff"><animate attributeName="opacity" values="0.7;1;0.7" dur="1.5s" repeatCount="indefinite"/></path></svg></div>
+                        <div class="tl-content"><h4>Weeks 3-4: Energy Boost</h4><p>Increased energy levels and better sleep quality. Weight loss: 2-3 lbs.</p><div class="tl-progress"><div class="tl-bar" style="--tw:50%"></div></div></div>
                     </div>
                     <div class="tl-item">
-                        <div class="tl-marker">5-8</div>
-                        <div class="tl-content">
-                            <h4>Momentum Building</h4>
-                            <p>Consistent energy, clothes fit better. Weight loss: 5-6 lbs total.</p>
-                        </div>
+                        <div class="tl-marker"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M22 12h-4l-3 9L9 3l-3 9H2" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                        <div class="tl-content"><h4>Weeks 5-8: Momentum</h4><p>Consistent energy, clothes fit better. Weight loss: 5-6 lbs total.</p><div class="tl-progress"><div class="tl-bar" style="--tw:75%"></div></div></div>
                     </div>
                     <div class="tl-item">
-                        <div class="tl-marker">9-12</div>
-                        <div class="tl-content">
-                            <h4>Goal Achievement</h4>
-                            <p>Reach target weight of 165 lbs. New healthy habits established!</p>
-                        </div>
+                        <div class="tl-marker tl-marker-goal"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 12l4 4 8-9" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                        <div class="tl-content"><h4>Weeks 9-12: Goal Achieved</h4><p>Reach target weight of 165 lbs. New healthy habits established!</p><div class="tl-progress"><div class="tl-bar tl-bar-complete" style="--tw:100%"></div></div></div>
                     </div>
                 </div>
             </div>
@@ -529,8 +349,235 @@
             <div class="results-attribution">
                 <p>This personalized plan was created by <strong>Amazon Nova Lite</strong> analyzing your profile through natural conversation with <strong>Amazon Nova Sonic</strong></p>
             </div>
+            <div class="results-actions">
+                <button id="restart-demo" class="cta-button secondary" data-testid="restart-demo-button">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M1 4v6h6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.51 15a9 9 0 105.64-11.36L1 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Start New Consultation
+                </button>
+            </div>
+        </div>
+    </section>
 
-            <!-- Restart -->
+    <!-- Results Section — Letterpad Report -->
+    <section id="results-section" class="results-section" style="display:none;">
+        <div class="letterpad">
+            <!-- Teal top bar -->
+            <div class="lp-topbar"></div>
+
+            <!-- Letterhead -->
+            <div class="lp-header">
+                <div class="lp-logo-group">
+                    <div class="lp-logo-icon">
+                        <svg width="38" height="38" viewBox="0 0 28 28" fill="none">
+                            <rect width="28" height="28" rx="8" fill="#0D9488"/>
+                            <path d="M14 6v16M8 14h12" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="lp-brand">NutriVoice AI</div>
+                        <div class="lp-tagline">AI-Powered Nutrition &amp; Dietetics</div>
+                    </div>
+                </div>
+                <div class="lp-doctor-block">
+                    <div class="lp-dr-avatar">
+                        <svg viewBox="0 0 80 80" fill="none">
+                            <circle cx="40" cy="30" r="16" fill="#FBBF24"/>
+                            <circle cx="35" cy="28" r="1.5" fill="#1F2937"/>
+                            <circle cx="45" cy="28" r="1.5" fill="#1F2937"/>
+                            <path d="M37 34 Q40 37 43 34" stroke="#1F2937" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                            <path d="M24 28 Q24 14 40 14 Q56 14 56 28" fill="#4B5563"/>
+                            <path d="M25 80 L25 55 Q25 46 35 46 L45 46 Q55 46 55 55 L55 80" fill="white" stroke="#E5E7EB"/>
+                            <path d="M35 46 L40 56 L45 46" fill="#0D9488"/>
+                        </svg>
+                    </div>
+                    <div class="lp-dr-info">
+                        <span class="lp-dr-name">Dr. Nova</span>
+                        <span class="lp-dr-title">AI Dietitian &amp; Nutritionist</span>
+                        <span class="lp-dr-id">Lic. NOVA-AI-2025</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lp-divider"></div>
+
+            <!-- Report meta -->
+            <div class="lp-meta">
+                <div class="lp-meta-item"><span class="lp-meta-label">Report No.</span><span class="lp-meta-val">NV-2025-00347</span></div>
+                <div class="lp-meta-item"><span class="lp-meta-label">Date</span><span class="lp-meta-val" id="lp-date">March 15, 2025</span></div>
+                <div class="lp-meta-item"><span class="lp-meta-label">Consultation</span><span class="lp-meta-val">Voice (Amazon Nova Sonic)</span></div>
+                <div class="lp-meta-item"><span class="lp-meta-label">Analysis</span><span class="lp-meta-val">Amazon Nova Lite</span></div>
+            </div>
+
+            <!-- Title -->
+            <div class="lp-report-title">
+                <h2>Personalized Nutrition Plan</h2>
+                <p>Comprehensive dietary assessment and meal plan based on voice consultation</p>
+            </div>
+
+            <!-- Patient Summary -->
+            <div class="lp-section anim-card">
+                <div class="lp-section-num">01</div>
+                <h3 class="lp-section-title">Patient Summary</h3>
+                <div class="patient-grid">
+                    <div class="patient-stat"><span class="stat-label">Age</span><span class="stat-value">32 years</span></div>
+                    <div class="patient-stat">
+                        <span class="stat-label">Current BMI</span>
+                        <span class="stat-value bmi-warning">
+                            <span class="bmi-ring-wrap">
+                                <svg class="bmi-ring" width="52" height="52" viewBox="0 0 52 52">
+                                    <circle cx="26" cy="26" r="22" fill="none" stroke="#FEF3C7" stroke-width="5"/>
+                                    <circle cx="26" cy="26" r="22" fill="none" stroke="#D97706" stroke-width="5" stroke-dasharray="138.2" stroke-dashoffset="138.2" stroke-linecap="round" transform="rotate(-90 26 26)" class="bmi-ring-fill"/>
+                                </svg>
+                                <span class="bmi-ring-val">27.3</span>
+                            </span>
+                        </span>
+                    </div>
+                    <div class="patient-stat"><span class="stat-label">Target Weight</span><span class="stat-value">165 lbs <small>(-10 lbs)</small></span></div>
+                    <div class="patient-stat"><span class="stat-label">Activity Level</span><span class="stat-value">Lightly Active</span></div>
+                    <div class="patient-stat">
+                        <span class="stat-label">Daily Calories</span>
+                        <span class="stat-value highlight">
+                            <svg class="cal-flame" width="22" height="22" viewBox="0 0 24 24" fill="none">
+                                <path d="M12 2c0 4-4 6-4 10a4 4 0 008 0c0-4-4-6-4-10z" fill="#0D9488" opacity="0.7"><animate attributeName="opacity" values="0.5;0.9;0.5" dur="2s" repeatCount="indefinite"/></path>
+                                <path d="M12 8c0 2-2 3-2 5a2 2 0 004 0c0-2-2-3-2-5z" fill="#CCFBF1"/>
+                            </svg>
+                            1,950 kcal
+                        </span>
+                    </div>
+                    <div class="patient-stat"><span class="stat-label">Restrictions</span><span class="stat-value">No red meat</span></div>
+                </div>
+            </div>
+
+            <!-- Macro Breakdown -->
+            <div class="lp-section anim-card">
+                <div class="lp-section-num">02</div>
+                <h3 class="lp-section-title">Daily Macro Breakdown</h3>
+                <div class="macro-chart-row">
+                    <div class="donut-wrap">
+                        <svg class="donut-chart" viewBox="0 0 120 120">
+                            <circle cx="60" cy="60" r="50" fill="none" stroke="#F3F4F6" stroke-width="14"/>
+                            <circle cx="60" cy="60" r="50" fill="none" stroke="#0D9488" stroke-width="14" stroke-dasharray="314" stroke-dashoffset="314" stroke-linecap="round" transform="rotate(-90 60 60)" class="donut-seg donut-protein"/>
+                            <circle cx="60" cy="60" r="50" fill="none" stroke="#3B82F6" stroke-width="14" stroke-dasharray="314" stroke-dashoffset="314" stroke-linecap="round" transform="rotate(47 60 60)" class="donut-seg donut-carbs"/>
+                            <circle cx="60" cy="60" r="50" fill="none" stroke="#F59E0B" stroke-width="14" stroke-dasharray="314" stroke-dashoffset="314" stroke-linecap="round" transform="rotate(180 60 60)" class="donut-seg donut-fat"/>
+                            <text x="60" y="56" text-anchor="middle" font-size="16" font-weight="800" fill="#1F2937">1,950</text>
+                            <text x="60" y="72" text-anchor="middle" font-size="10" fill="#9CA3AF">kcal/day</text>
+                        </svg>
+                    </div>
+                    <div class="macro-legend">
+                        <div class="legend-item"><span class="legend-dot" style="background:#0D9488"></span><span class="legend-label">Protein</span><span class="legend-val">150g (38%)</span></div>
+                        <div class="legend-item"><span class="legend-dot" style="background:#3B82F6"></span><span class="legend-label">Carbs</span><span class="legend-val">181g (37%)</span></div>
+                        <div class="legend-item"><span class="legend-dot" style="background:#F59E0B"></span><span class="legend-label">Fat</span><span class="legend-val">74g (25%)</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Meal Plan -->
+            <div class="lp-section anim-card">
+                <div class="lp-section-num">03</div>
+                <h3 class="lp-section-title">Prescribed Daily Meal Plan</h3>
+                <div class="meals-grid">
+                    <div class="meal-card"><div class="meal-card-time">7:00 - 8:00 AM</div><div class="meal-card-header"><span class="meal-emoji">🌅</span><div><h4>Breakfast</h4><span class="meal-cal">450 cal</span></div></div><ul><li>2 scrambled eggs with spinach and tomatoes</li><li>1 cup Greek yogurt with mixed berries</li><li>1 slice whole grain toast with avocado</li><li>Green tea or black coffee</li></ul><div class="meal-macros"><span class="macro"><b>P</b> 35g</span><span class="macro"><b>C</b> 45g</span><span class="macro"><b>F</b> 15g</span></div><p class="meal-why">High protein breakfast kickstarts metabolism and provides sustained energy</p></div>
+                    <div class="meal-card"><div class="meal-card-time">10:30 AM</div><div class="meal-card-header"><span class="meal-emoji">☕</span><div><h4>Mid-Morning Snack</h4><span class="meal-cal">150 cal</span></div></div><ul><li>1 medium apple with 1 tbsp almond butter</li><li>OR: Handful of mixed nuts</li></ul><div class="meal-macros"><span class="macro"><b>P</b> 8g</span><span class="macro"><b>C</b> 18g</span><span class="macro"><b>F</b> 6g</span></div><p class="meal-why">Prevents energy dips and controls hunger before lunch</p></div>
+                    <div class="meal-card"><div class="meal-card-time">12:30 - 1:30 PM</div><div class="meal-card-header"><span class="meal-emoji">☀️</span><div><h4>Lunch</h4><span class="meal-cal">550 cal</span></div></div><ul><li>Grilled chicken breast (6 oz) or baked salmon</li><li>Quinoa bowl (1 cup cooked)</li><li>Mixed green salad with olive oil dressing</li><li>Steamed broccoli and carrots</li></ul><div class="meal-macros"><span class="macro"><b>P</b> 40g</span><span class="macro"><b>C</b> 50g</span><span class="macro"><b>F</b> 20g</span></div><p class="meal-why">Balanced macros provide energy for afternoon activities without red meat</p></div>
+                    <div class="meal-card"><div class="meal-card-time">4:00 - 5:00 PM</div><div class="meal-card-header"><span class="meal-emoji">🍎</span><div><h4>Evening Snack</h4><span class="meal-cal">200 cal</span></div></div><ul><li>Protein smoothie: banana, protein powder, almond milk</li><li>OR: Hummus with carrot and cucumber sticks</li></ul><div class="meal-macros"><span class="macro"><b>P</b> 15g</span><span class="macro"><b>C</b> 20g</span><span class="macro"><b>F</b> 8g</span></div><p class="meal-why">Boosts energy levels and prevents overeating at dinner</p></div>
+                    <div class="meal-card"><div class="meal-card-time">7:00 - 8:00 PM</div><div class="meal-card-header"><span class="meal-emoji">🌙</span><div><h4>Dinner</h4><span class="meal-cal">500 cal</span></div></div><ul><li>Baked salmon or grilled turkey breast (6 oz)</li><li>Sweet potato (medium, baked)</li><li>Steamed asparagus and Brussels sprouts</li><li>Small side salad with lemon dressing</li></ul><div class="meal-macros"><span class="macro"><b>P</b> 42g</span><span class="macro"><b>C</b> 40g</span><span class="macro"><b>F</b> 22g</span></div><p class="meal-why">Lighter dinner aids digestion and better sleep quality</p></div>
+                    <div class="meal-card"><div class="meal-card-time">9:00 PM (Optional)</div><div class="meal-card-header"><span class="meal-emoji">🌜</span><div><h4>Before Bed</h4><span class="meal-cal">100 cal</span></div></div><ul><li>Small bowl of cottage cheese with berries</li><li>OR: Chamomile tea with a few almonds</li></ul><div class="meal-macros"><span class="macro"><b>P</b> 10g</span><span class="macro"><b>C</b> 8g</span><span class="macro"><b>F</b> 3g</span></div><p class="meal-why">Casein protein supports overnight muscle recovery</p></div>
+                </div>
+            </div>
+
+            <!-- Water Intake -->
+            <div class="lp-section lp-section-water anim-card">
+                <div class="lp-section-num">04</div>
+                <h3 class="lp-section-title">Hydration Protocol</h3>
+                <span class="section-tag">2.5 - 3L Daily</span>
+                <div class="water-visual">
+                    <div class="water-bottle-wrap">
+                        <svg viewBox="0 0 80 160" fill="none" class="bottle-svg">
+                            <rect x="22" y="28" width="36" height="124" rx="10" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="2"/>
+                            <rect x="28" y="18" width="24" height="14" rx="4" fill="#DBEAFE" stroke="#BFDBFE" stroke-width="2"/>
+                            <rect x="24" y="52" width="32" height="98" rx="8" fill="#3B82F6" class="water-fill-anim"/>
+                            <text x="40" y="145" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">2.5L</text>
+                        </svg>
+                    </div>
+                    <div class="water-schedule">
+                        <div class="water-row"><span>Upon Waking (6:30 AM)</span><span class="water-amt">500ml</span></div>
+                        <div class="water-row"><span>Before Breakfast</span><span class="water-amt">250ml</span></div>
+                        <div class="water-row"><span>Mid-Morning</span><span class="water-amt">500ml</span></div>
+                        <div class="water-row"><span>Before Lunch</span><span class="water-amt">250ml</span></div>
+                        <div class="water-row"><span>Afternoon</span><span class="water-amt">500ml</span></div>
+                        <div class="water-row"><span>Before Dinner</span><span class="water-amt">250ml</span></div>
+                        <div class="water-row"><span>Evening</span><span class="water-amt">250ml</span></div>
+                    </div>
+                </div>
+                <p class="water-tip">Increase intake during and after your 30-minute walks</p>
+            </div>
+
+            <!-- Recommendations -->
+            <div class="lp-section anim-card">
+                <div class="lp-section-num">05</div>
+                <h3 class="lp-section-title">Clinical Recommendations</h3>
+                <div class="rec-grid">
+                    <div class="rec-card"><div class="rec-card-icon">🏃</div><h4>Exercise</h4><ul><li>Continue 30-min walks daily</li><li>Add 2-3 strength sessions/week</li><li>Try yoga for flexibility</li></ul></div>
+                    <div class="rec-card"><div class="rec-card-icon">😴</div><h4>Sleep</h4><ul><li>Aim for 7-8 hours nightly</li><li>Consistent sleep schedule</li><li>No screens 1hr before bed</li></ul></div>
+                    <div class="rec-card"><div class="rec-card-icon">🧘</div><h4>Stress</h4><ul><li>10-min daily meditation</li><li>Deep breathing exercises</li><li>Short breaks during work</li></ul></div>
+                    <div class="rec-card"><div class="rec-card-icon">📊</div><h4>Tracking</h4><ul><li>Weekly weigh-ins (same time)</li><li>Track energy levels daily</li><li>Monitor portion sizes</li></ul></div>
+                    <div class="rec-card"><div class="rec-card-icon">🚫</div><h4>Foods to Limit</h4><ul><li>Processed foods &amp; sugary snacks</li><li>Fried foods &amp; trans fats</li><li>Alcohol (max 1-2/week)</li></ul></div>
+                    <div class="rec-card"><div class="rec-card-icon">⏰</div><h4>Meal Timing</h4><ul><li>Eat every 3-4 hours</li><li>Don't skip breakfast</li><li>Dinner 3hrs before bed</li></ul></div>
+                </div>
+            </div>
+
+            <!-- 12-Week Timeline -->
+            <div class="lp-section anim-card">
+                <div class="lp-section-num">06</div>
+                <h3 class="lp-section-title">12-Week Treatment Timeline</h3>
+                <div class="timeline">
+                    <div class="tl-item">
+                        <div class="tl-marker"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4" stroke="#fff" stroke-width="2" stroke-linecap="round"><animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="8s" repeatCount="indefinite"/></path></svg></div>
+                        <div class="tl-content"><h4>Weeks 1-2: Adaptation</h4><p>Body adjusts to new eating pattern. You may feel slight hunger initially.</p><div class="tl-progress"><div class="tl-bar" style="--tw:25%"></div></div></div>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-marker"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="#fff"><animate attributeName="opacity" values="0.7;1;0.7" dur="1.5s" repeatCount="indefinite"/></path></svg></div>
+                        <div class="tl-content"><h4>Weeks 3-4: Energy Boost</h4><p>Increased energy levels and better sleep quality. Weight loss: 2-3 lbs.</p><div class="tl-progress"><div class="tl-bar" style="--tw:50%"></div></div></div>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-marker"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M22 12h-4l-3 9L9 3l-3 9H2" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                        <div class="tl-content"><h4>Weeks 5-8: Momentum</h4><p>Consistent energy, clothes fit better. Weight loss: 5-6 lbs total.</p><div class="tl-progress"><div class="tl-bar" style="--tw:75%"></div></div></div>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-marker tl-marker-goal"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 12l4 4 8-9" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                        <div class="tl-content"><h4>Weeks 9-12: Goal Achieved</h4><p>Reach target weight of 165 lbs. New healthy habits established!</p><div class="tl-progress"><div class="tl-bar tl-bar-complete" style="--tw:100%"></div></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Signature / Footer -->
+            <div class="lp-signature anim-card">
+                <div class="lp-sig-line">
+                    <div class="lp-sig-doctor">
+                        <svg class="lp-sig-svg" viewBox="0 0 180 50" fill="none">
+                            <path d="M10 38 Q30 5 50 30 Q65 48 80 20 Q95 -5 110 25 Q120 40 135 15 Q150 -5 170 30" stroke="#0D9488" stroke-width="2" fill="none" stroke-linecap="round" class="sig-draw"/>
+                        </svg>
+                        <span class="lp-sig-name">Dr. Nova, AI Dietitian</span>
+                        <span class="lp-sig-date" id="lp-sig-date">March 15, 2025</span>
+                    </div>
+                    <div class="lp-stamp">
+                        <svg width="70" height="70" viewBox="0 0 70 70" fill="none">
+                            <circle cx="35" cy="35" r="32" stroke="#0D9488" stroke-width="2" stroke-dasharray="4 3" opacity="0.5"/>
+                            <circle cx="35" cy="35" r="25" stroke="#0D9488" stroke-width="1.5" opacity="0.3"/>
+                            <text x="35" y="30" text-anchor="middle" font-size="7" font-weight="700" fill="#0D9488" opacity="0.6">NUTRIVOICE</text>
+                            <text x="35" y="40" text-anchor="middle" font-size="6" fill="#0D9488" opacity="0.5">VERIFIED</text>
+                            <path d="M28 35l4 4 10-10" stroke="#0D9488" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lp-footer-bar">
+                <span>NutriVoice AI — Powered by Amazon Nova Sonic &amp; Amazon Nova Lite</span>
+                <span>This report was generated through AI voice consultation. For medical advice, consult a licensed physician.</span>
+            </div>
+
+            <!-- Actions outside letterpad -->
             <div class="results-actions">
                 <button id="restart-demo" class="cta-button secondary" data-testid="restart-demo-button">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M1 4v6h6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.51 15a9 9 0 105.64-11.36L1 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
