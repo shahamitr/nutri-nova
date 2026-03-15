@@ -79,10 +79,29 @@ export class ContentRecommendationService {
     const videos = await this.searchYouTube({
       query,
       maxResults,
-ess: 'health wellness tips lifestyle',
+      category: 'recipe',
+    });
+
+    // Cache results
+    this.saveToCache(cacheKey, videos);
+
+    return videos;
+  }
+
+  /**
+   * Get wellness videos based on topic
+   */
+  async getWellnessVideos(topic: string = 'general', maxResults: number = 12): Promise<YouTubeVideo[]> {
+    const queries: Record<string, string> = {
+      sleep: 'sleep meditation relax',
+      stress: 'stress relief calming',
+      nutrition: 'healthy eating tips',
+      mindfulness: 'mindfulness simple guide',
+      hydration: 'drinking water health benefits',
+      general: 'health wellness tips lifestyle',
     };
 
-    const query = queries[topic] || queries.wellness;
+    const query = queries[topic] || queries.general;
     const cacheKey = `wellness_${topic}_${maxResults}`;
 
     // Check cache

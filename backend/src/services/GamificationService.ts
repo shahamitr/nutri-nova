@@ -48,7 +48,7 @@ interface LeaderboardEntry {
   rank: number;
 }
 
-class GamificationService {
+export class GamificationService {
   // Points for different activities
   private readonly ACTIVITY_POINTS = {
     meal_logged: 10,

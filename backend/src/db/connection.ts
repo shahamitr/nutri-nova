@@ -52,3 +52,5 @@ export const query = async <T = any>(
     connection.release();
   }
 };
+
+export const db = getPool();

@@ -75,8 +75,31 @@ function sanitizeData(data: any): any {
   return data;
 }
 
-// Format loUG];
-    return levels.indexOf(level) <= levels.indexOf(this.minLevel);
+function formatLogEntry(entry: LogEntry): string {
+  const { timestamp, level, message, context, error } = entry;
+  let formatted = `[${timestamp}] ${level}: ${message}`;
+  if (context) {
+    formatted += ` | Context: ${JSON.stringify(sanitizeData(context))}`;
+  }
+  if (error) {
+    formatted += ` | Error: ${error.name} - ${error.message}\n${error.stack}`;
+  }
+  return formatted;
+}
+
+class Logger {
+  private minLevel: LogLevel = LogLevel.INFO;
+
+  constructor() {
+    const envLevel = process.env.LOG_LEVEL?.toUpperCase() as LogLevel;
+    if (Object.values(LogLevel).includes(envLevel)) {
+      this.minLevel = envLevel;
+    }
+  }
+
+  private shouldLog(level: LogLevel): boolean {
+    const levels = [LogLevel.DEBUG, LogLevel.INFO, LogLevel.WARN, LogLevel.ERROR];
+    return levels.indexOf(level) >= levels.indexOf(this.minLevel);
   }
 
   private log(level: LogLevel, message: string, context?: Record<string, any>, error?: Error) {

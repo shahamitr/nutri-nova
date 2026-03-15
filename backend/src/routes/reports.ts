@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { authenticateToken } from '../middleware/auth';
+import { authenticate } from '../middleware/auth';
 import { PDFReportService } from '../services/PDFReportService';
 import fs from 'fs';
 
@@ -10,7 +10,7 @@ const pdfService = new PDFReportService();
  * Generate comprehensive health report
  * POST /generate
  */
-app.post('/generate', authenticateToken, async (c) => {
+app.post('/generate', authenticate, async (c) => {
   try {
     const userId = c.get('userId');
     const body = await c.req.json();
@@ -43,7 +43,7 @@ app.post('/generate', authenticateToken, async (c) => {
  * Get list of user's reports
  * GET /list
  */
-app.get('/list', authenticateToken, async (c) => {
+app.get('/list', authenticate, async (c) => {
   try {
     const userId = c.get('userId');
 
@@ -70,7 +70,7 @@ app.get('/list', authenticateToken, async (c) => {
  * Download specific report
  * GET /download/:id
  */
-app.get('/download/:id', authenticateToken, async (c) => {
+app.get('/download/:id', authenticate, async (c) => {
   try {
     const userId = c.get('userId');
     const reportId = parseInt(c.req.param('id'));
@@ -124,7 +124,7 @@ app.get('/download/:id', authenticateToken, async (c) => {
  * Delete report
  * DELETE /:id
  */
-app.delete('/:id', authenticateToken, async (c) => {
+app.delete('/:id', authenticate, async (c) => {
   try {
     const userId = c.get('userId');
     const reportId = parseInt(c.req.param('id'));

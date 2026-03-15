@@ -1,31 +1,31 @@
-import express from 'express';
-import { authenticateToken } from '../middleware/auth';
+import { Hono } from 'hono';
+import { authenticate } from '../middleware/auth';
 import ConversationMemoryService from '../services/ConversationMemoryService';
 
-const router = express.Router();
+const router = new Hono();
 
 /**
  * GET /api/memory
  * Get all memories for the authenticated user
  */
-router.get('/', authenticateToken, async (req, res) => {
+router.get('/', authenticate, async (c) => {
   try {
-    const userId = req.user!.id;
-    const limit = parseInt(req.query.limit as string) || 50;
+    const userId = c.get('userId');
+    const limit = parseInt(c.req.query('limit') || '50');
 
     const memories = await ConversationMemoryService.getUserMemories(userId, limit);
 
-    res.json({
+    return c.json({
       success: true,
       memories,
       count: memories.length
     });
   } catch (error) {
     console.error('Error fetching memories:', error);
-    res.status(500).json({
+    return c.json({
       success: false,
       error: 'Failed to fetch memories'
-    });
+    }, 500);
   }
 });
 
@@ -33,25 +33,25 @@ router.get('/', authenticateToken, async (req, res) => {
  * GET /api/memory/type/:type
  * Get memories by type
  */
-router.get('/type/:type', authenticateToken, async (req, res) => {
+router.get('/type/:type', authenticate, async (c) => {
   try {
-    const userId = req.user!.id;
-    const type = req.params.type as 'preference' | 'fact' | 'goal' | 'concern' | 'restriction';
-    const limit = parseInt(req.query.limit as string) || 20;
+    const userId = c.get('userId');
+    const type = c.req.param('type') as 'preference' | 'fact' | 'goal' | 'concern' | 'restriction';
+    const limit = parseInt(c.req.query('limit') || '20');
 
     const memories = await ConversationMemoryService.getMemoriesByType(userId, type, limit);
 
-    res.json({
+    return c.json({
       success: true,
       memories,
       count: memories.length
     });
   } catch (error) {
     console.error('Error fetching memories by type:', error);
-    res.status(500).json({
+    return c.json({
       success: false,
       error: 'Failed to fetch memories'
-    });
+    }, 500);
   }
 });
 
@@ -59,32 +59,32 @@ router.get('/type/:type', authenticateToken, async (req, res) => {
  * GET /api/memory/search
  * Search memories by content
  */
-router.get('/search', authenticateToken, async (req, res) => {
+router.get('/search', authenticate, async (c) => {
   try {
-    const userId = req.user!.id;
-    const searchTerm = req.query.q as string;
-    const limit = parseInt(req.query.limit as string) || 10;
+    const userId = c.get('userId');
+    const searchTerm = c.req.query('q');
+    const limit = parseInt(c.req.query('limit') || '10');
 
     if (!searchTerm) {
-      return res.status(400).json({
+      return c.json({
         success: false,
         error: 'Search term is required'
-      });
+      }, 400);
     }
 
     const memories = await ConversationMemoryService.searchMemories(userId, searchTerm, limit);
 
-    res.json({
+    return c.json({
       success: true,
       memories,
       count: memories.length
     });
   } catch (error) {
     console.error('Error searching memories:', error);
-    res.status(500).json({
+    return c.json({
       success: false,
       error: 'Failed to search memories'
-    });
+    }, 500);
   }
 });
 
@@ -92,22 +92,22 @@ router.get('/search', authenticateToken, async (req, res) => {
  * GET /api/memory/stats
  * Get memory statistics for the user
  */
-router.get('/stats', authenticateToken, async (req, res) => {
+router.get('/stats', authenticate, async (c) => {
   try {
-    const userId = req.user!.id;
+    const userId = c.get('userId');
 
     const stats = await ConversationMemoryService.getMemoryStats(userId);
 
-    res.json({
+    return c.json({
       success: true,
       stats
     });
   } catch (error) {
     console.error('Error fetching memory stats:', error);
-    res.status(500).json({
+    return c.json({
       success: false,
       error: 'Failed to fetch memory statistics'
-    });
+    }, 500);
   }
 });
 
@@ -115,16 +115,16 @@ router.get('/stats', authenticateToken, async (req, res) => {
  * POST /api/memory
  * Manually add a memory
  */
-router.post('/', authenticateToken, async (req, res) => {
+router.post('/', authenticate, async (c) => {
   try {
-    const userId = req.user!.id;
-    const { memory_type, content, importance } = req.body;
+    const userId = c.get('userId');
+    const { memory_type, content, importance } = await c.req.json();
 
     if (!memory_type || !content) {
-      return res.status(400).json({
+      return c.json({
         success: false,
         error: 'memory_type and content are required'
-      });
+      }, 400);
     }
 
     const memoryId = await ConversationMemoryService.storeMemory({
@@ -134,17 +134,17 @@ router.post('/', authenticateToken, async (req, res) => {
       importance: importance || 5
     });
 
-    res.json({
+    return c.json({
       success: true,
       memory_id: memoryId,
       message: 'Memory stored successfully'
     });
   } catch (error) {
     console.error('Error storing memory:', error);
-    res.status(500).json({
+    return c.json({
       success: false,
       error: 'Failed to store memory'
-    });
+    }, 500);
   }
 });
 
@@ -152,30 +152,30 @@ router.post('/', authenticateToken, async (req, res) => {
  * PUT /api/memory/:id/importance
  * Update memory importance
  */
-router.put('/:id/importance', authenticateToken, async (req, res) => {
+router.put('/:id/importance', authenticate, async (c) => {
   try {
-    const memoryId = parseInt(req.params.id);
-    const { importance } = req.body;
+    const memoryId = parseInt(c.req.param('id'));
+    const { importance } = await c.req.json();
 
     if (!importance || importance < 1 || importance > 10) {
-      return res.status(400).json({
+      return c.json({
         success: false,
         error: 'Importance must be between 1 and 10'
-      });
+      }, 400);
     }
 
     await ConversationMemoryService.updateImportance(memoryId, importance);
 
-    res.json({
+    return c.json({
       success: true,
       message: 'Memory importance updated'
     });
   } catch (error) {
     console.error('Error updating memory importance:', error);
-    res.status(500).json({
+    return c.json({
       success: false,
       error: 'Failed to update memory importance'
-    });
+    }, 500);
   }
 });
 
@@ -183,22 +183,22 @@ router.put('/:id/importance', authenticateToken, async (req, res) => {
  * DELETE /api/memory/:id
  * Deactivate a memory (soft delete)
  */
-router.delete('/:id', authenticateToken, async (req, res) => {
+router.delete('/:id', authenticate, async (c) => {
   try {
-    const memoryId = parseInt(req.params.id);
+    const memoryId = parseInt(c.req.param('id'));
 
     await ConversationMemoryService.deactivateMemory(memoryId);
 
-    res.json({
+    return c.json({
       success: true,
       message: 'Memory deactivated successfully'
     });
   } catch (error) {
     console.error('Error deactivating memory:', error);
-    res.status(500).json({
+    return c.json({
       success: false,
       error: 'Failed to deactivate memory'
-    });
+    }, 500);
   }
 });
 

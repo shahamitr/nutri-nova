@@ -45,7 +45,21 @@ export class VoiceService {
       // Call Nova Sonic STT API with retry logic
       let lastError: Error | null = null;
 
-      for (let attempt = 1; attempt <= this.maxRetries    const duration = Date.now() - startTime;
+      for (let attempt = 1; attempt <= this.maxRetries; attempt++) {
+        try {
+          const response = await axios.post(
+            `${this.novaSonicEndpoint}/v1/speech-to-text`,
+            { audio_base64: audioData, format },
+            {
+              headers: {
+                'Authorization': `Bearer ${this.novaSonicApiKey}`,
+                'Content-Type': 'application/json',
+              },
+              timeout: 10000,
+            }
+          );
+
+          const duration = Date.now() - startTime;
 
           // Log performance
           console.log(`STT completed in ${duration}ms (attempt ${attempt})`);

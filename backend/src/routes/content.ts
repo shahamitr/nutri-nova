@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { authenticateToken } from '../middleware/auth';
+import { authenticate } from '../middleware/auth';
 import { ContentRecommendationService } from '../services/ContentRecommendationService';
 import { query } from '../db/connection';
 
@@ -10,7 +10,7 @@ const contentService = new ContentRecommendationService();
  * Get personalized exercise videos
  * GET /exercises
  */
-app.get('/exercises', authenticateToken, async (c) => {
+app.get('/exercises', authenticate, async (c) => {
   try {
     const userId = c.get('userId');
 
@@ -48,7 +48,7 @@ app.get('/exercises', authenticateToken, async (c) => {
  * Get recipe videos
  * GET /recipes?mealType=breakfast
  */
-app.get('/recipes', authenticateToken, async (c) => {
+app.get('/recipes', authenticate, async (c) => {
   try {
     const userId = c.get('userId');
     const mealType = c.req.query('mealType'); // breakfast, lunch, dinner, snack
@@ -88,7 +88,7 @@ app.get('/recipes', authenticateToken, async (c) => {
  * Get wellness videos
  * GET /wellness?topic=meditation
  */
-app.get('/wellness', authenticateToken, async (c) => {
+app.get('/wellness', authenticate, async (c) => {
   try {
     const topic = c.req.query('topic') || 'wellness'; // meditation, sleep, stress, wellness
 
@@ -119,7 +119,7 @@ app.get('/wellness', authenticateToken, async (c) => {
  * Save favorite video
  * POST /favorites
  */
-app.post('/favorites', authenticateToken, async (c) => {
+app.post('/favorites', authenticate, async (c) => {
   try {
     const userId = c.get('userId');
     const body = await c.req.json();
@@ -165,7 +165,7 @@ app.post('/favorites', authenticateToken, async (c) => {
  * Get user's favorite videos
  * GET /favorites
  */
-app.get('/favorites', authenticateToken, async (c) => {
+app.get('/favorites', authenticate, async (c) => {
   try {
     const userId = c.get('userId');
     const category = c.req.query('category'); // exercise, recipe, wellness
@@ -205,7 +205,7 @@ app.get('/favorites', authenticateToken, async (c) => {
  * Remove favorite video
  * DELETE /favorites/:videoId
  */
-app.delete('/favorites/:videoId', authenticateToken, async (c) => {
+app.delete('/favorites/:videoId', authenticate, async (c) => {
   try {
     const userId = c.get('userId');
     const videoId = c.req.param('videoId');

@@ -357,9 +357,23 @@ export class ConversationManager {
       console.error('Error saving message to database:', error);
       // Don't throw - conversation should continue even if DB save fails
     }
-  }     }
+  }
+
+  /**
+   * Extract data from response based on current stage
+   */
+  private async extractDataFromResponse(state: ConversationState, response: string): Promise<void> {
+    const lowerResponse = response.toLowerCase();
+
+    switch (state.stage) {
+      case ConversationStage.BASIC_PROFILE:
+        // Extract age
+        if (!state.collected_data.age) {
+          const ageMatch = response.match(/(\d+)/);
+          if (ageMatch) {
+            state.collected_data.age = parseInt(ageMatch[1]);
+          }
         }
-        // Extract gender
         else if (!state.collected_data.gender) {
           if (lowerResponse.includes('male') && !lowerResponse.includes('female')) {
             state.collected_data.gender = 'MALE';
@@ -488,17 +502,17 @@ export class ConversationManager {
           state.collected_data.digestive_issues = lowerResponse.includes('none') || lowerResponse.includes('no') ? null : response;
         }
         // Extract family history
-        else if (state.collected_data.family_history ===
-
-      case ConversationStage.DYNAMIC_QUESTIONS:
-        // Store medical conditions or other dynamic responses
-        if (!state.collected_data.medical_conditions) {
-          state.collected_data.medical_conditions = response;
+        else if (state.collected_data.family_history === undefined) {
+          state.collected_data.family_history = lowerResponse.includes('none') || lowerResponse.includes('no') ? null : response;
         }
         break;
-    }
-  }
-e.includes('occasional')) {
+
+      case ConversationStage.HABITS:
+        // Extract smoking status
+        if (state.collected_data.smoking_status === undefined) {
+          if (lowerResponse.includes('none') || lowerResponse.includes('no') || lowerResponse.includes('non')) {
+            state.collected_data.smoking_status = 'NON_SMOKER';
+          } else if (lowerResponse.includes('occasional')) {
             state.collected_data.smoking_status = 'OCCASIONAL';
           } else if (lowerResponse.includes('regular')) {
             state.collected_data.smoking_status = 'REGULAR';
@@ -560,6 +574,16 @@ e.includes('occasional')) {
           state.collected_data.health_goals = response;
         }
         break;
+
+      case ConversationStage.DYNAMIC_QUESTIONS:
+        // Store medical conditions or other dynamic responses
+        if (!state.collected_data.medical_conditions) {
+          state.collected_data.medical_conditions = response;
+        }
+        break;
+    }
+  }
+
   /**
    * Validate response completeness
    */

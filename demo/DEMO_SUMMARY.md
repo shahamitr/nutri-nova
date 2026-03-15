@@ -1,5 +1,15 @@
 # NutriVoice AI Demo - Complete Summary
 
+## 🎤 Elevator Pitch
+
+**NutriVoice AI: Your Personal AI Diet Doctor, Powered by Amazon Nova**
+
+Imagine having a nutrition expert in your pocket who understands you through natural conversation. NutriVoice AI combines Amazon Nova Sonic's voice intelligence with Nova Lite's reasoning to deliver personalized nutrition plans in minutes—not days. Simply talk about your health goals, lifestyle, and preferences, and receive a comprehensive 12-week meal plan with daily schedules, water intake guidance, and lifestyle recommendations tailored specifically to you. No forms to fill out, no complex apps to learn—just natural conversation that leads to real results.
+
+**The Future of Personalized Nutrition: Conversational, Intelligent, and Accessible.**
+
+---
+
 ## ✅ Demo Status: COMPLETE
 
 The interactive demo has been successfully created and includes all requested features.
