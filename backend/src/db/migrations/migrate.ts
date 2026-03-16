@@ -27,7 +27,7 @@ async function getMigrationFiles(): Promise<string[]> {
   const migrationsDir = path.join(__dirname);
   const files = fs.readdirSync(migrationsDir);
   return files
-    .filter((file) => file.endsWith('.sql') && file.startsWith('0'))
+    .filter((file) => file.endsWith('.sql') && file.startsWith('0') && !file.includes('.down.'))
     .sort();
 }
 
@@ -35,14 +35,19 @@ async function executeMigration(filename: string): Promise<void> {
   const pool = getPool();
   const filepath = path.join(__dirname, filename);
   const sql = fs.readFileSync(filepath, 'utf-8')
-    .replace(/\r\n/g, '\n') // Normalize line endings
+    .replace(/\r\n/g, '\n')
     .replace(/\r/g, '\n');
 
-  // Split by semicolon and execute each statement
-  const statements = sql
+  // Remove full-line comments before splitting to avoid filtering out entire statements
+  const cleanedSql = sql
+    .split('\n')
+    .filter((line) => !line.trim().startsWith('--'))
+    .join('\n');
+
+  const statements = cleanedSql
     .split(';')
     .map((s) => s.trim())
-    .filter((s) => s.length > 0 && !s.startsWith('--')); // Skip comments
+    .filter((s) => s.length > 0);
 
   for (const statement of statements) {
     await pool.execute(statement);

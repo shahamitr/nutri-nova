@@ -16,18 +16,19 @@
     "seed": "bun src/db/seed.ts"
   },
   "dependencies": {
+    "@aws-sdk/client-bedrock-runtime": "^3.1009.0",
     "@nutrivoice/shared": "workspace:*",
-    "hono": "^3.12.0",
-    "mysql2": "^3.6.5",
+    "axios": "^1.6.5",
     "bcrypt": "^5.1.1",
-    "jsonwebtoken": "^9.0.2",
-    "speakeasy": "^2.0.0",
-    "qrcode": "^1.5.3",
+    "hono": "^3.12.0",
     "ioredis": "^5.3.2",
-    "zod": "^3.22.4",
+    "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.6.5",
     "pdfkit": "^0.15.0",
+    "qrcode": "^1.5.3",
+    "speakeasy": "^2.0.0",
     "uuid": "^9.0.1",
-    "axios": "^1.6.5"
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",

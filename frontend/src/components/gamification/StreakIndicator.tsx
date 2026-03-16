@@ -24,10 +24,7 @@ export default function StreakIndicator() {
       });
       const data = await response.json();
       if (data.success) {
-        setStreak({
-          current_streak: data.stats.current_streak,
-          longest_streak: data.stats.longest_streak,
-        });
+        setStreak({ current_streak: data.stats.current_streak, longest_streak: data.stats.longest_streak });
       }
     } catch (error) {
       console.error('Error fetching streak:', error);
@@ -39,34 +36,26 @@ export default function StreakIndicator() {
   if (loading || !streak) return null;
 
   return (
-    <div className="bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-lg p-4 shadow-lg">
+    <div className="bg-gradient-to-br from-orange-500 via-red-500 to-rose-600 text-white rounded-2xl p-6 shadow-lg shadow-orange-500/20">
       <div className="flex items-center justify-between">
         <div>
-          <div className="text-sm font-semibold uppercase tracking-wide opacity-90">
-            Current Streak
-          </div>
-          <div className="text-3xl font-bold mt-1">
-            {streak.current_streak} {streak.current_streak === 1 ? 'day' : 'days'} 🔥
-          </div>
-          <div className="text-xs opacity-75 mt-1">
-            Longest: {streak.longest_streak} days
-          </div>
+          <p className="text-sm font-semibold uppercase tracking-wider text-orange-100">Current Streak</p>
+          <p className="text-4xl font-black mt-1">
+            {streak.current_streak} <span className="text-2xl font-bold">{streak.current_streak === 1 ? 'day' : 'days'}</span>
+          </p>
+          <p className="text-xs text-orange-200 mt-2">
+            Personal best: {streak.longest_streak} days
+          </p>
         </div>
         <div className="text-6xl">
-          {streak.current_streak >= 7 ? '🔥' :
-           streak.current_streak >= 3 ? '⚡' : '✨'}
+          {streak.current_streak >= 7 ? '🔥' : streak.current_streak >= 3 ? '⚡' : '✨'}
         </div>
       </div>
-      {streak.current_streak === 0 && (
-        <div className="mt-3 text-sm opacity-90">
-          Complete an activity today to start your streak!
-        </div>
-      )}
-      {streak.current_streak > 0 && (
-        <div className="mt-3 text-sm opacity-90">
-          Don't break the streak! Come back tomorrow.
-        </div>
-      )}
+      <p className="text-sm text-orange-100 mt-4 pt-3 border-t border-white/20">
+        {streak.current_streak === 0
+          ? 'Complete an activity today to start your streak!'
+          : "Keep it going — don't break the chain!"}
+      </p>
     </div>
   );
 }

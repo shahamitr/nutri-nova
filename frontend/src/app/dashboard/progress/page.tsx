@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import ProgressCard from '@/components/dashboard/ProgressCard';
+import PageHeader from '@/components/dashboard/PageHeader';
+import { PageTransition, FadeIn } from '@/components/motion/MotionWrappers';
 
 interface Progress {
   profile_completed: boolean;
@@ -18,16 +20,12 @@ export default function ProgressPage() {
   const [progress, setProgress] = useState<Progress | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchProgress();
-  }, []);
+  useEffect(() => { fetchProgress(); }, []);
 
   const fetchProgress = async () => {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/progress/user`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
       if (response.ok) {
         const data = await response.json();
@@ -42,27 +40,39 @@ export default function ProgressPage() {
 
   const calculateCompletion = () => {
     if (!progress) return 0;
-    const completed = [
-      progress.profile_completed,
-      progress.bmi_calculated,
-      progress.routine_completed,
-      progress.diet_generated,
-    ].filter(Boolean).length;
+    const completed = [progress.profile_completed, progress.bmi_calculated, progress.routine_completed, progress.diet_generated].filter(Boolean).length;
     return (completed / 4) * 100;
   };
 
   if (loading) {
-    return <div className="text-center py-12">Loading progress...</div>;
+    return (
+      <div className="text-center py-12">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600 mx-auto"></div>
+        <p className="mt-4 text-slate-500">Loading progress...</p>
+      </div>
+    );
   }
 
   if (!progress) {
-    return <div className="text-center py-12">No progress data found.</div>;
+    return (
+      <div className="text-center py-12 bg-white rounded-2xl border border-slate-200/60 shadow-sm">
+        <p className="text-slate-500">No progress data found.</p>
+      </div>
+    );
   }
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6">Your Progress</h1>
-      <ProgressCard progress={progress} completionPercentage={calculateCompletion()} />
+    <PageTransition>
+    <div className="space-y-6">
+      <PageHeader
+        title="Your Progress"
+        description="Track your journey milestones"
+        icon="📈"
+      />
+      <FadeIn delay={0.1}>
+        <ProgressCard progress={progress} completionPercentage={calculateCompletion()} />
+      </FadeIn>
     </div>
+    </PageTransition>
   );
 }

@@ -1,11 +1,7 @@
-import axios from 'axios';
-
-interface NovaLiteRequest {
-  prompt: string;
-  max_tokens?: number;
-  temperature?: number;
-  context?: string[];
-}
+import {
+  BedrockRuntimeClient,
+  InvokeModelCommand,
+} from '@aws-sdk/client-bedrock-runtime';
 
 interface NovaLiteResponse {
   response: string;
@@ -14,15 +10,25 @@ interface NovaLiteResponse {
 }
 
 export class NovaLiteService {
-  private readonly novaLiteApiKey = process.env.NOVA_LITE_API_KEY || '';
-  private readonly novaLiteEndpoint = process.env.NOVA_LITE_ENDPOINT || 'https://nova-lite.amazonaws.com';
+  private readonly client: BedrockRuntimeClient;
+  private readonly modelId = 'amazon.nova-lite-v1:0';
   private readonly maxRetries = 3;
   private readonly retryDelay = 1000;
   private readonly defaultMaxTokens = 500;
   private readonly defaultTemperature = 0.7;
 
+  constructor() {
+    this.client = new BedrockRuntimeClient({
+      region: process.env.AWS_REGION || 'us-east-1',
+      credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID || '',
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || '',
+      },
+    });
+  }
+
   /**
-   * Generate AI response using Nova Lite
+   * Generate AI response using Amazon Nova Lite via Bedrock
    * Target latency: < 3 seconds
    */
   async generateResponse(
@@ -38,32 +44,61 @@ export class NovaLiteService {
 
       for (let attempt = 1; attempt <= this.maxRetries; attempt++) {
         try {
-          const response = await axios.post<NovaLiteResponse>(
-            `${this.novaLiteEndpoint}/v1/generate`,
-            {
-              prompt,
-              context,
-              max_tokens: maxTokens,
-              temperature,
-            },
-            {
-              headers: {
-                'Authorization': `Bearer ${this.novaLiteApiKey}`,
-                'Content-Type': 'application/json',
-              },
-              timeout: 8000, // 8 second timeout
+          // Build messages array with context
+          const messages: Array<{ role: string; content: Array<{ text: string }> }> = [];
+
+          if (context.length > 0) {
+            for (const ctx of context) {
+              messages.push({
+                role: 'user',
+                content: [{ text: ctx }],
+              });
+              messages.push({
+                role: 'assistant',
+                content: [{ text: 'Understood.' }],
+              });
             }
-          );
+          }
+
+          messages.push({
+            role: 'user',
+            content: [{ text: prompt }],
+          });
+
+          const body = JSON.stringify({
+            messages,
+            inferenceConfig: {
+              maxTokens,
+              temperature,
+              topP: 0.9,
+            },
+          });
+
+          const command = new InvokeModelCommand({
+            modelId: this.modelId,
+            contentType: 'application/json',
+            accept: 'application/json',
+            body: new TextEncoder().encode(body),
+          });
+
+          const response = await this.client.send(command);
+          const responseBody = JSON.parse(new TextDecoder().decode(response.body));
 
           const duration = Date.now() - startTime;
           console.log(`Nova Lite response generated in ${duration}ms (attempt ${attempt})`);
 
-          return response.data.response;
+          // Extract text from Bedrock Converse-style response
+          const outputText =
+            responseBody?.output?.message?.content?.[0]?.text ||
+            responseBody?.content?.[0]?.text ||
+            '';
+
+          return outputText;
         } catch (error: any) {
           lastError = error;
 
           if (attempt < this.maxRetries) {
-            console.warn(`Nova Lite attempt ${attempt} failed, retrying...`);
+            console.warn(`Nova Lite attempt ${attempt} failed: ${error.message}, retrying...`);
             await this.sleep(this.retryDelay * attempt);
           }
         }

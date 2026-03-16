@@ -84,11 +84,11 @@ export const loginRateLimit = rateLimit({
 });
 
 /**
- * Rate limiter for signup endpoint (3 attempts per hour)
+ * Rate limiter for signup endpoint
  */
 export const signupRateLimit = rateLimit({
-  maxRequests: 3,
-  windowMs: 3600000, // 1 hour
+  maxRequests: parseInt(process.env.RATE_LIMIT_SIGNUP || '3'),
+  windowMs: parseInt(process.env.RATE_LIMIT_WINDOW || '900000'), // 15 minutes
 });
 
 /**

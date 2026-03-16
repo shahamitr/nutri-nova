@@ -13,6 +13,15 @@ interface ActivityLogResult {
 }
 
 /**
+ * Dispatch gamification update event
+ */
+function dispatchGamificationEvent(eventType: string, detail?: any) {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent(`gamification:${eventType}`, { detail }));
+  }
+}
+
+/**
  * Log an activity and earn points
  */
 export async function logActivity(
@@ -34,6 +43,25 @@ export async function logActivity(
     });
 
     const data = await response.json();
+
+    if (data.success) {
+      // Dispatch update event to refresh stats
+      dispatchGamificationEvent('activity', {
+        activityType,
+        points_earned: data.points_earned,
+        level_up: data.level_up,
+        new_level: data.new_level,
+      });
+
+      // Dispatch level up event if applicable
+      if (data.level_up) {
+        dispatchGamificationEvent('levelup', { new_level: data.new_level });
+      }
+
+      // General update event
+      dispatchGamificationEvent('update');
+    }
+
     return data;
   } catch (error) {
     console.error('Error logging activity:', error);
@@ -68,17 +96,16 @@ export function showActivityToast(result: ActivityLogResult) {
     ? `🎉 Level Up! You're now level ${result.new_level}! (+${result.points_earned} points)`
     : `✨ +${result.points_earned} points earned!`;
 
-  // You can integrate with a toast library here
-  // For now, we'll use a simple alert (replace with proper toast in production)
   if (typeof window !== 'undefined') {
-    // Create a custom toast element
     const toast = document.createElement('div');
-    toast.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-slide-in';
+    toast.className = 'fixed top-4 right-4 bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-6 py-3 rounded-xl shadow-lg z-50 animate-slide-in font-medium';
     toast.textContent = message;
     document.body.appendChild(toast);
 
     setTimeout(() => {
-      toast.classList.add('animate-fade-out');
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateY(-10px)';
+      toast.style.transition = 'all 0.3s ease-out';
       setTimeout(() => document.body.removeChild(toast), 300);
     }, 3000);
   }
@@ -97,4 +124,11 @@ export async function logActivityWithToast(
     showActivityToast(result);
   }
   return result;
+}
+
+/**
+ * Trigger a streak refresh event
+ */
+export function triggerStreakRefresh() {
+  dispatchGamificationEvent('update');
 }

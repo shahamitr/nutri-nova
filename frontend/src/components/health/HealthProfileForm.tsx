@@ -92,7 +92,7 @@ export default function HealthProfileForm({ onSaveSuccess }: HealthProfileFormPr
     setSuccess(false);
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/health/save-profile`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/health/profile`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,

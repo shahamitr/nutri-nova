@@ -462,6 +462,101 @@ export class GamificationService {
 
     return summary;
   }
+
+  /**
+   * Get user onboarding progress from user_progress table
+   */
+  async getProgress(userId: number) {
+    const [rows] = await db.execute<RowDataPacket[]>(
+      `SELECT profile_completed, bmi_calculated, routine_completed, diet_generated, points, badges
+       FROM user_progress WHERE user_id = ?`,
+      [userId]
+    );
+
+    if (rows.length === 0) {
+      return {
+        profile_completed: false,
+        bmi_calculated: false,
+        routine_completed: false,
+        diet_generated: false,
+        points: 0,
+        badges: [],
+        completion_percentage: 0,
+      };
+    }
+
+    const row = rows[0];
+    const stages = [row.profile_completed, row.bmi_calculated, row.routine_completed, row.diet_generated];
+    const completed = stages.filter(Boolean).length;
+    const badges = typeof row.badges === 'string' ? JSON.parse(row.badges) : (row.badges || []);
+
+    return {
+      profile_completed: !!row.profile_completed,
+      bmi_calculated: !!row.bmi_calculated,
+      routine_completed: !!row.routine_completed,
+      diet_generated: !!row.diet_generated,
+      points: row.points || 0,
+      badges,
+      completion_percentage: (completed / 4) * 100,
+    };
+  }
+
+  /**
+   * Update a specific onboarding progress stage
+   */
+  async updateProgress(userId: number, stage: string) {
+    const stageMap: Record<string, string> = {
+      profile: 'profile_completed',
+      bmi: 'bmi_calculated',
+      routine: 'routine_completed',
+      diet: 'diet_generated',
+    };
+
+    const column = stageMap[stage];
+    if (!column) throw new Error(`Invalid stage: ${stage}`);
+
+    const badgeMap: Record<string, string> = {
+      profile: 'Profile Pioneer',
+      bmi: 'BMI Tracker',
+      routine: 'Routine Builder',
+      diet: 'Diet Planner',
+    };
+
+    const pointsMap: Record<string, number> = {
+      profile: 10,
+      bmi: 15,
+      routine: 20,
+      diet: 25,
+    };
+
+    // Check if already completed to avoid duplicate points
+    const [existing] = await db.execute<RowDataPacket[]>(
+      `SELECT ${column} as done, badges FROM user_progress WHERE user_id = ?`,
+      [userId]
+    );
+
+    if (existing.length === 0) {
+      // Create row if missing
+      await db.execute(
+        `INSERT INTO user_progress (user_id) VALUES (?)`,
+        [userId]
+      );
+    }
+
+    const alreadyDone = existing.length > 0 && existing[0].done;
+    if (alreadyDone) return;
+
+    const currentBadges = existing.length > 0
+      ? (typeof existing[0].badges === 'string' ? JSON.parse(existing[0].badges) : (existing[0].badges || []))
+      : [];
+
+    const newBadges = [...currentBadges, badgeMap[stage]];
+
+    await db.execute(
+      `UPDATE user_progress SET ${column} = TRUE, points = points + ?, badges = ? WHERE user_id = ?`,
+      [pointsMap[stage], JSON.stringify(newBadges), userId]
+    );
+  }
 }
 
 export default new GamificationService();

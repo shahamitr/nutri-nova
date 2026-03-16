@@ -7,15 +7,26 @@ CREATE TABLE IF NOT EXISTS workout_plans (
   description TEXT,
   difficulty ENUM('beginner', 'intermediate', 'advanced') NOT NULL,
   duration_weeks INT DEFAULT 4,
-  goals JSON COMMENT 'Array of goals: weight_loss, muscle_gain, endurance, flexibility',
+  goals JSON,
   is_active BOOLEAN DEFAULT true,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-  INDEX idx_user_activeEFAULT 60,
+  INDEX idx_user_active (user_id, is_active)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS workout_exercises (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  workout_plan_id INT NOT NULL,
+  exercise_name VARCHAR(255) NOT NULL,
+  exercise_type ENUM('cardio', 'strength', 'flexibility', 'balance', 'hiit') NOT NULL,
+  day_of_week ENUM('monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday') NOT NULL,
+  sets_target INT,
+  reps_target INT,
+  duration_minutes INT DEFAULT 60,
   video_url VARCHAR(500),
   instructions TEXT,
-  equipment VARCHAR(255) COMMENT 'Comma-separated list',
-  target_muscles VARCHAR(255) COMMENT 'Comma-separated list',
+  equipment VARCHAR(255),
+  target_muscles VARCHAR(255),
   calories_burned_estimate INT,
   order_index INT DEFAULT 0,
   FOREIGN KEY (workout_plan_id) REFERENCES workout_plans(id) ON DELETE CASCADE,
@@ -33,7 +44,7 @@ CREATE TABLE IF NOT EXISTS workout_logs (
   reps_completed INT,
   duration_minutes INT,
   calories_burned INT,
-  difficulty_rating INT COMMENT 'Scale 1-10',
+  difficulty_rating INT,
   notes TEXT,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
   FOREIGN KEY (workout_exercise_id) REFERENCES workout_exercises(id) ON DELETE CASCADE,
@@ -41,7 +52,6 @@ CREATE TABLE IF NOT EXISTS workout_logs (
   INDEX idx_completed_at (completed_at DESC)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Create workout statistics table
 CREATE TABLE IF NOT EXISTS workout_stats (
   id INT PRIMARY KEY AUTO_INCREMENT,
   user_id INT NOT NULL,

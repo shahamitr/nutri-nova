@@ -1,9 +1,8 @@
 import { Hono } from 'hono';
-import { GamificationService } from '../services/GamificationService';
+import gamificationService from '../services/GamificationService';
 import { authenticate } from '../middleware/auth';
 
 const progress = new Hono();
-const gamificationService = new GamificationService();
 
 /**
  * GET /api/progress/user

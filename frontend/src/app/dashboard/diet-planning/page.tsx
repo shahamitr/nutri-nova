@@ -1,16 +1,22 @@
 'use client';
 
 import VoiceInterface from '@/components/voice/VoiceInterface';
+import PageHeader from '@/components/dashboard/PageHeader';
+import { PageTransition, FadeIn } from '@/components/motion/MotionWrappers';
 
 export default function DietPlanningPage() {
   return (
-    <div>
-      <h1 className="text-3xl font-bold mb-6">Start Diet Planning</h1>
-      <p className="text-gray-600 mb-6">
-        Have a conversation with our AI nutritionist to create your personalized diet plan.
-        Use the microphone button to speak, or type your responses.
-      </p>
-      <VoiceInterface />
-    </div>
+    <PageTransition>
+      <div className="space-y-6">
+        <PageHeader
+          title="Start Diet Planning"
+          description="Have a conversation with Dr. Nova to create your personalized diet plan."
+          icon="🎯"
+        />
+        <FadeIn delay={0.1}>
+          <VoiceInterface />
+        </FadeIn>
+      </div>
+    </PageTransition>
   );
 }

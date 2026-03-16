@@ -35,7 +35,10 @@ export default function VoiceSettingsForm() {
       if (response.ok) {
         const data = await response.json();
         if (data.data) {
-          setSettings(data.data);
+          setSettings({
+            ...data.data,
+            speech_speed: Number(data.data.speech_speed) || 1.0,
+          });
         }
       }
     } catch (error) {
@@ -51,7 +54,7 @@ export default function VoiceSettingsForm() {
     setMessage(null);
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/voice/save-settings`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/voice/settings`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

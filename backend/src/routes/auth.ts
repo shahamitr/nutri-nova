@@ -54,7 +54,8 @@ auth.post('/login', loginRateLimit, async (c) => {
     const { email, password, totp_code } = body;
 
     // Validate required fields
-    if (!email || !password || !totp_code) {
+    const isDev = process.env.NODE_ENV === 'development';
+    if (!email || !password || (!totp_code && !isDev)) {
       return c.json(
         {
           success: false,

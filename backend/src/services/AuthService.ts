@@ -202,16 +202,20 @@ export class AuthService {
     // Decrypt TOTP secret
     const totpSecret = this.decryptTOTPSecret(user.totp_secret);
 
-    // Verify TOTP code (30-second time window)
-    const totpValid = speakeasy.totp.verify({
-      secret: totpSecret,
-      encoding: 'base32',
-      token: totpCode,
-      window: 1, // Allow 1 step before/after (30 seconds each side)
-    });
+    // In development mode, accept any 6-digit TOTP code (e.g. 000000)
+    const isDev = process.env.NODE_ENV === 'development';
+    if (!isDev) {
+      // Verify TOTP code (30-second time window)
+      const totpValid = speakeasy.totp.verify({
+        secret: totpSecret,
+        encoding: 'base32',
+        token: totpCode,
+        window: 1, // Allow 1 step before/after (30 seconds each side)
+      });
 
-    if (!totpValid) {
-      throw new Error('Invalid TOTP code');
+      if (!totpValid) {
+        throw new Error('Invalid TOTP code');
+      }
     }
 
     // Generate JWT session token
